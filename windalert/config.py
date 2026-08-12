@@ -76,9 +76,11 @@ def load(path: str | Path = "config.toml") -> Config:
         model=g.get("model", "best_match"),
         day_start_hour=int(g.get("day_start_hour", 7)),
         day_end_hour=int(g.get("day_end_hour", 21)),
-        # Umgebungsvariablen haben Vorrang (GitHub Secrets)
-        telegram_token=os.environ.get("TELEGRAM_TOKEN", t.get("token", "")).strip(),
-        telegram_chat_id=os.environ.get("TELEGRAM_CHAT_ID", str(t.get("chat_id", ""))).strip(),
+        # Umgebungsvariablen haben Vorrang (GitHub Secrets).
+        # 'or' statt get(default): eine LEER gesetzte Env-Var (z.B. fehlendes Secret ->
+        # GitHub setzt "") faellt korrekt auf den Config-Wert zurueck.
+        telegram_token=(os.environ.get("TELEGRAM_TOKEN") or t.get("token", "")).strip(),
+        telegram_chat_id=(os.environ.get("TELEGRAM_CHAT_ID") or str(t.get("chat_id", ""))).strip(),
         foehn_south=_point("south", "Lugano", 46.004, 8.951),
         foehn_north=_point("north", "Zuerich", 47.378, 8.540),
         spots=spots,

@@ -11,7 +11,8 @@ def send_telegram(token: str, chat_id: str, text: str, timeout: int = 20) -> boo
     Ohne Zugangsdaten wird nur auf die Konsole geschrieben (Dry-Run) -> False.
     """
     if not token or not chat_id:
-        print("[DRY-RUN] (kein Telegram-Token/Chat-ID gesetzt) Nachricht waere:\n" + text + "\n")
+        missing = ", ".join(m for m, ok in [("Token", token), ("Chat-ID", chat_id)] if not ok)
+        print(f"[DRY-RUN] fehlt: {missing}. Nachricht waere:\n" + text + "\n")
         return False
 
     url = f"https://api.telegram.org/bot{token}/sendMessage"
