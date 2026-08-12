@@ -1,5 +1,9 @@
 # Wind-Alarm 🌬️ – Wingfoil-Push für Schweizer Seen
 
+### 👉 [**Live-Dashboard öffnen: $WINDFOLIO**](https://ramunbaer.github.io/Windforecast/) 🚀
+
+[![Dashboard](https://img.shields.io/badge/%24WINDFOLIO-Live%20Dashboard-00e676?style=for-the-badge&logo=github)](https://ramunbaer.github.io/Windforecast/)
+
 Meldet **im Voraus** per Telegram, wenn der **mittlere Wind 10 m über Boden**
 (nicht Böen, nicht Höhenwind) an deinen Spots einen Grenzwert erreicht – und
 protokolliert nebenbei die Bedingungen (Druck, Windrichtung, Föhn/Bise, Sonne),
