@@ -27,9 +27,10 @@ min_run_hours  = 2         # mind. so viele zusammenhängende Stunden über der 
 [telegram]
 # Empfohlen: Token & Chat-ID als Umgebungsvariablen / GitHub-Secrets setzen:
 #   TELEGRAM_TOKEN, TELEGRAM_CHAT_ID   (überschreiben die Werte hier)
-# Die Felder hier nur für lokalen Test füllen – NICHT ins öffentliche Git committen!
+# Der Token (GEHEIM!) gehört NUR in ein GitHub-Secret / Umgebungsvariable, nie hierher.
+# Die chat_id ist nicht geheim und darf hier stehen -> dann genügt EIN Secret (TELEGRAM_TOKEN).
 token   = ""
-chat_id = ""
+chat_id = "8835818255"
 
 # Druckdifferenz Alpensüd − Alpennord (hPa) als Föhn-Indikator.
 # Positiv & gross  => Südföhn-Tendenz (v.a. relevant am Urnersee).
