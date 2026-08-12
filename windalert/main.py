@@ -212,7 +212,21 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Wind-Alarm fuer Schweizer Seen (Wingfoil)")
     ap.add_argument("--config", default="config.toml")
     ap.add_argument("--dry-run", action="store_true", help="nichts senden, nur Konsole")
+    ap.add_argument("--test", action="store_true",
+                    help="einmalige Telegram-Testnachricht senden und beenden")
     args = ap.parse_args()
+
+    if args.test:
+        conf = cfg.load(args.config)
+        ok = send_telegram(
+            conf.telegram_token, conf.telegram_chat_id,
+            "✅ <b>Wind-Alarm</b> Test — Verbindung steht. "
+            "Sobald der Wind an einem Spot den Grenzwert erreicht, kommt hier die Warnung.",
+        )
+        print("Testnachricht gesendet." if ok else
+              "Nicht gesendet (Token/Chat-ID fehlen oder falsch — siehe Ausgabe oben).")
+        return
+
     run(args.config, args.dry_run)
 
 
