@@ -33,10 +33,21 @@ jobs:
         run: |
           git config user.name  "wind-bot"
           git config user.email "wind-bot@users.noreply.github.com"
+          git config merge.ours.driver true   # Treiber fuer 'merge=ours' (siehe .gitattributes)
           git add data/
           if git diff --staged --quiet; then
             echo "Keine Aenderungen an data/."
-          else
-            git commit -m "data: $(date -u +%FT%TZ)"
-            git push
+            exit 0
           fi
+          git commit -m "data: $(date -u +%FT%TZ)"
+          # Rennsicherer Push: bei zwischenzeitlichem Remote-Update rebasen und erneut versuchen
+          for i in 1 2 3 4 5; do
+            if git push; then
+              echo "Push ok (Versuch $i)."
+              exit 0
+            fi
+            echo "Push abgelehnt – rebase auf origin/main und erneut (Versuch $i)…"
+            git pull --rebase --autostash origin main || true
+          done
+          echo "Push nach mehreren Versuchen fehlgeschlagen." >&2
+          exit 1
