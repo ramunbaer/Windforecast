@@ -106,24 +106,31 @@ Ausgabe je Spot: Anteil foilbarer Stunden, häufigste **Wetterlagen**,
 **Windrichtungen**, beste **Tageszeiten**, mittlerer **Luftdruck**,
 **Föhn-Δp** (Lugano−Zürich) und **Einstrahlung** (Thermik-Indikator).
 
-### Web-Dashboard (grafischer Verlauf)
+### Web-Dashboard „$WINDFOLIO" (Trading-Terminal-Look)
 
-[`dashboard.html`](dashboard.html) zeigt je Spot den **Windverlauf mit Luftdruck**
-(Punkte nach Wetterlage eingefärbt), die **foilbaren Stunden pro Lage** und ein
-**Treiber-Streudiagramm** (Wind gegen Luftdruck / Föhn-Δp / Sonneneinstrahlung /
-Bewölkung) – so siehst du auf einen Blick, bei welchen Bedingungen es Wind gab.
+[`index.html`](index.html) ist ein Dashboard im Krypto-Terminal-Stil (dark, Neon):
+Ticker-Leiste, **Portfolio-Karten je Spot** (aktueller Wind, Bft, Sparkline,
+FOILBAR/FLAT-Signal) und je gewähltem Spot **Windverlauf + Luftdruck**, **foilbare
+Stunden pro Wetterlage** und ein **Treiber-Streudiagramm** (Wind gegen Luftdruck /
+Föhn-Δp / Sonneneinstrahlung / Bewölkung) – so siehst du auf einen Blick, bei welchen
+Bedingungen es Wind gab.
 
-**Lokal ansehen** (das Dashboard lädt `data/history.csv` per `fetch`, braucht also
-einen kleinen Server – Doppelklick auf die Datei genügt wegen Browser-Sicherheit nicht):
+**Lokal ansehen** (lädt `data/history.csv` per `fetch`, braucht also einen kleinen
+Server – Doppelklick genügt wegen Browser-Sicherheit nicht):
 ```bash
 python -m http.server 8000
-# dann im Browser: http://localhost:8000/dashboard.html
+# dann im Browser: http://localhost:8000/
 ```
 Alternativ im Dashboard direkt eine CSV-Datei auswählen (Fallback ohne Server).
 
-**Online via GitHub Pages** (optional): Repo → Settings → Pages → Branch `main` / `/root`.
-Danach ist das Dashboard unter `https://<user>.github.io/<repo>/dashboard.html`
-erreichbar und liest automatisch die vom Job aktualisierte `data/history.csv`.
+**Online via GitHub Pages:** Repo → Settings → Pages → Source „Deploy from a branch"
+→ Branch `main` / `/ (root)` → Save. Danach unter
+`https://<user>.github.io/<repo>/` erreichbar; liest automatisch die vom Job
+aktualisierte `data/history.csv`.
+> ⚠️ **Privates Repo:** GitHub Pages ist für private Repos nur mit einem bezahlten
+> Plan (Pro) verfügbar. Auf dem Free-Plan muss das Repo **öffentlich** sein. Dann
+> werden `index.html`, `data/` und `config.toml` (inkl. `chat_id`, nicht geheim)
+> öffentlich sichtbar – der Bot-Token bleibt im GitHub-Secret und ist nie im Repo.
 
 ### Treiber / Wetterlagen (heuristisch)
 - **Südföhn:** Δp(Süd−Nord) ≥ +4 hPa **und** Wind aus S-Sektor → v.a. am Urnersee.
@@ -158,7 +165,7 @@ Windforecast/
 │  ├─ logbook.py            # CSV-Logbuch
 │  └─ config.py             # Konfiguration laden
 ├─ scripts/analyze.py       # Auswertung des Logbuchs (Konsole)
-├─ dashboard.html           # grafisches Web-Dashboard (Chart.js)
+├─ index.html               # Web-Dashboard „$WINDFOLIO" (Chart.js, Trading-Look)
 ├─ .github/workflows/wind.yml
 ├─ .claude/launch.json      # lokaler Server für das Dashboard
 └─ data/                    # history.csv + state.json (vom Job erzeugt)

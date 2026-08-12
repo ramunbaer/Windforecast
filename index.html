@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WINDFOLIO · Wind Terminal</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Full-Crypto-Terminal-Palette */
+    --green:#00e676; --green-dim:#00a85a;
+    --red:#ff3b5c;   --red-dim:#b3283f;
+    --gold:#ffb020;  --gold2:#ffcf33;
+    --cyan:#22d3ee;  --purple:#a855f7;
+    --blue:#38bdf8;  --blue-dim:#3a6ea5; --slate:#64748b;
+    --bg:#05060a; --panel:rgba(56,189,248,.05); --panel2:rgba(56,189,248,.09);
+    --line:rgba(120,140,180,.18); --ink:#e6edf6; --muted:#8b98ab;
+    --glow-green:0 0 20px rgba(0,230,118,.6);
+    --glow-red:0 0 20px rgba(255,59,92,.5);
+    --glow-gold:0 0 20px rgba(255,176,32,.55);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:"Chakra Petch",system-ui,sans-serif;color:var(--ink);
+    background:
+      radial-gradient(1100px 600px at 12% -8%, rgba(0,230,118,.13), transparent 60%),
+      radial-gradient(1000px 620px at 100% 0%, rgba(168,85,247,.12), transparent 55%),
+      radial-gradient(900px 700px at 50% 120%, rgba(34,211,238,.10), transparent 60%),
+      var(--bg);
+    background-attachment:fixed;min-height:100vh;
+  }
+  .mono{font-family:"JetBrains Mono",monospace}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  a{color:var(--cyan)}
+
+  /* ---- Top-Bar ---- */
+  .topbar{display:flex;align-items:center;gap:14px;padding:16px 26px;border-bottom:1px solid var(--line);
+    background:rgba(5,6,10,.6);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20}
+  .brand{font-weight:700;font-size:20px;letter-spacing:1.5px}
+  .brand .tk{color:var(--green);text-shadow:var(--glow-green)}
+  .brand .sub{color:var(--muted);font-size:11px;letter-spacing:2px;font-weight:500}
+  .live{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);
+    letter-spacing:1.5px;text-transform:uppercase}
+  .pulse{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:var(--glow-green);
+    animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.7)}}
+
+  /* ---- Ticker ---- */
+  .ticker{overflow:hidden;border-bottom:1px solid var(--line);background:rgba(0,0,0,.4);white-space:nowrap}
+  .ticker .track{display:inline-flex;gap:42px;padding:9px 0;animation:scroll 34s linear infinite}
+  .ticker:hover .track{animation-play-state:paused}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .tick{font-size:13px;letter-spacing:.5px;color:var(--muted)}
+  .tick b{color:var(--ink);letter-spacing:1px}
+  .tick .up{color:var(--green)} .tick .down{color:var(--red)}
+
+  main{max-width:1240px;margin:0 auto;padding:26px 22px 60px}
+  .eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin:26px 2px 12px}
+  .eyebrow:first-child{margin-top:6px}
+
+  /* ---- Portfolio-Karten ---- */
+  .grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+  .coin{position:relative;border:1px solid var(--line);border-radius:16px;padding:16px 16px 10px;
+    background:linear-gradient(180deg,var(--panel2),var(--panel));cursor:pointer;overflow:hidden;
+    transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease}
+  .coin:hover{transform:translateY(-3px);border-color:rgba(56,189,248,.45)}
+  .coin.sel{border-color:var(--green);box-shadow:var(--glow-green)}
+  .coin .name{font-size:13px;letter-spacing:1px;color:var(--ink);font-weight:700}
+  .coin .regime{font-size:10.5px;letter-spacing:.6px;color:var(--muted);text-transform:uppercase;margin-top:2px}
+  .coin .val{font-family:"JetBrains Mono",monospace;font-size:34px;font-weight:700;line-height:1.05;margin-top:8px}
+  .coin.foil .val{color:var(--green);text-shadow:var(--glow-green)}
+  .coin .u{font-size:14px;color:var(--muted);text-shadow:none}
+  .coin .row{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+  .bft{font-family:"JetBrains Mono",monospace;font-size:12px;padding:2px 8px;border-radius:999px;
+    border:1px solid var(--line);color:var(--cyan)}
+  .sig{font-size:11px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:999px}
+  .sig.on{color:#04120b;background:var(--green);box-shadow:var(--glow-green)}
+  .sig.off{color:var(--red);background:rgba(255,59,92,.10);border:1px solid rgba(255,59,92,.35)}
+  .coin.foil{animation:cardglow 2.6s ease-in-out infinite}
+  @keyframes cardglow{0%,100%{box-shadow:0 0 0 rgba(0,230,118,0)}50%{box-shadow:0 0 24px rgba(0,230,118,.4)}}
+  .spark{height:38px;margin-top:10px}
+
+  /* ---- Controls ---- */
+  .controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;border:1px solid var(--line);
+    border-radius:14px;padding:14px 16px;background:var(--panel);margin:8px 0 4px}
+  .controls label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  select,input[type=number]{font-family:"JetBrains Mono",monospace;background:#0a0e16;color:var(--ink);
+    border:1px solid var(--line);border-radius:9px;padding:9px 11px;min-width:150px}
+  select:focus,input:focus{outline:none;border-color:var(--green);box-shadow:var(--glow-green)}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink)}
+  .chk input{accent-color:var(--green)}
+
+  /* ---- KPIs ---- */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:16px 0}
+  .kpi{border:1px solid var(--line);border-radius:14px;padding:15px 16px;background:var(--panel)}
+  .kpi .v{font-family:"JetBrains Mono",monospace;font-size:26px;font-weight:700}
+  .kpi .l{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:6px}
+  .kpi.g .v{color:var(--green);text-shadow:var(--glow-green)}
+  .kpi.o .v{color:var(--gold);text-shadow:var(--glow-gold)}
+
+  .panel{border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:var(--panel)}
+  .panel h2{margin:0 0 3px;font-size:15px;letter-spacing:.5px}
+  .panel .sub{margin:0 0 12px;font-size:12px;color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+  .chart{position:relative;height:330px}
+  .chart.tall{height:360px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:11px;height:11px;border-radius:3px}
+
+  .empty{margin-top:30px;padding:44px;text-align:center;border:1px dashed var(--line);border-radius:16px;background:var(--panel)}
+  .empty input{margin-top:12px;color:var(--ink)}
+  footer{max-width:1240px;margin:0 auto;padding:0 22px 40px;color:var(--muted);font-size:12px}
+  @media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<h2 class="sr-only">Wind-Terminal im Trading-Stil: zeigt je Spot den aktuellen Wind, ein Foilbar-Signal und die Wetterbedingungen, bei denen Wind auftrat.</h2>
+
+<div class="topbar">
+  <div class="brand">$<span class="tk">WIND</span>FOLIO<div class="sub">WINGFOIL WIND TERMINAL · CH LAKES</div></div>
+  <div class="live"><span class="pulse"></span> Live · ICON-CH</div>
+</div>
+
+<div class="ticker"><div class="track mono" id="ticker"></div></div>
+
+<main>
+  <div id="app" style="display:none">
+    <div class="eyebrow">▚ Portfolio · aktuelle Bedingungen</div>
+    <div class="grid-cards" id="cards"></div>
+
+    <div class="eyebrow">▚ Analyse · ausgewählter Spot</div>
+    <div class="controls">
+      <div><label>Asset / Spot</label><select id="spot"></select></div>
+      <div><label>Grenzwert m/s</label><input id="thr" type="number" value="3.4" step="0.1" min="0"></div>
+      <div><label>Treiber (x-Achse)</label>
+        <select id="driver">
+          <option value="p_msl_hpa">Luftdruck (hPa)</option>
+          <option value="foehn_dp_hpa">Föhn-Δp Süd−Nord (hPa)</option>
+          <option value="radiation_wm2">Sonneneinstrahlung (W/m²)</option>
+          <option value="cloud_pct">Bewölkung (%)</option>
+        </select>
+      </div>
+      <label class="chk"><input id="onlyGood" type="checkbox" checked> nur Wind ≥ Grenzwert</label>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="panel">
+      <h2>📈 Wind & Luftdruck · Zeitverlauf</h2>
+      <p class="sub">Punkte = Wetterlage · gold gestrichelt = Grenzwert · blaue Linie = Luftdruck (rechts)</p>
+      <div class="chart tall"><canvas id="timeline"></canvas></div>
+      <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h2>🏆 Foilbare Stunden nach Lage</h2>
+        <p class="sub">Welche Wetterlage lieferte am meisten Wind?</p>
+        <div class="chart"><canvas id="byRegime"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>🎯 Treiber-Streudiagramm</h2>
+        <p class="sub" id="scatterSub">Wind gegen gewählten Treiber · Farbe = Lage</p>
+        <div class="chart"><canvas id="scatter"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="empty" class="empty">
+    <div style="font-size:15px">📡 Keine Marktdaten (<span class="mono">data/history.csv</span>)</div>
+    <div style="color:var(--muted);margin-top:6px">Der stündliche Job füllt sie automatisch. Zum lokalen Ansehen CSV wählen:</div>
+    <input type="file" id="file" accept=".csv">
+  </div>
+</main>
+
+<footer>⚠️ Keine Finanzberatung — nur Windberatung. Daten: Open-Meteo (MeteoSwiss ICON-CH). Farben = Wetterlagen; Föhn-Δp = Druckdifferenz Lugano−Zürich.</footer>
+
+<script>
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const REGIME={
+  Suedfoehn:{label:"Südföhn",color:css("--gold")},
+  Nordlage:{label:"Nordlage",color:css("--cyan")},
+  Bise:{label:"Bise",color:css("--blue")},
+  Thermik:{label:"Thermik",color:css("--purple")},
+  Gradient:{label:"Gradient",color:css("--slate")},
+  unbestimmt:{label:"unbestimmt",color:css("--green-dim")},
+};
+const rkey=r=>{r=(r||"").trim();for(const k in REGIME)if(r.startsWith(k))return k;return"unbestimmt";};
+const rcol=r=>REGIME[rkey(r)].color;
+
+function parseCSV(t){const rows=[];let f="",row=[],q=false;
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=c;}
+    else{if(c==='"')q=true;else if(c===","){row.push(f);f="";}
+      else if(c==="\n"||c==="\r"){if(c==="\r"&&t[i+1]==="\n")i++;row.push(f);rows.push(row);row=[];f="";}
+      else f+=c;}}
+  if(f!==""||row.length){row.push(f);rows.push(row);}
+  return rows.filter(r=>r.length>1||(r.length===1&&r[0]!==""));}
+const obj=rows=>{const h=rows[0];return rows.slice(1).map(r=>{const o={};h.forEach((k,i)=>o[k]=r[i]);return o;});};
+const num=v=>{const x=parseFloat(v);return Number.isFinite(x)?x:null;};
+const bft=ms=>{const b=[0.2,1.5,3.3,5.4,7.9,10.7,13.8,17.1];for(let i=0;i<b.length;i++)if(ms<=b[i])return i;return 12;};
+
+let DATA=[],charts={};
+function boot(text){
+  const rows=obj(parseCSV(text)).filter(o=>o.time_local);
+  if(!rows.length)return;
+  DATA=rows;
+  document.getElementById("empty").style.display="none";
+  document.getElementById("app").style.display="block";
+  const spots=[...new Set(DATA.map(o=>o.spot))];
+  document.getElementById("spot").innerHTML=spots.map(s=>`<option>${s}</option>`).join("");
+  ["spot","thr","driver","onlyGood"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+  buildLegend();buildCards(spots);buildTicker(spots);render();
+}
+const thrVal=()=>parseFloat(document.getElementById("thr").value)||0;
+function latest(spot){const r=DATA.filter(o=>o.spot===spot);return r.length?r[r.length-1]:null;}
+function series(spot,n=24){return DATA.filter(o=>o.spot===spot).slice(-n).map(o=>num(o.wind_ms));}
+
+function buildLegend(){
+  document.getElementById("legend").innerHTML=Object.values(REGIME)
+    .map(r=>`<span><i class="dot" style="background:${r.color}"></i>${r.label}</span>`).join("");
+}
+function buildTicker(spots){
+  const one=spots.map(s=>{const l=latest(s);if(!l)return"";const w=num(l.wind_ms)||0;const on=w>=thrVal();
+    const arr=on?'<span class="up">▲</span>':'<span class="down">▼</span>';
+    return `<span class="tick"><b>${s.toUpperCase()}</b> ${w.toFixed(1)} m/s ${arr} Bft${bft(w)}</span>`;}).join("");
+  document.getElementById("ticker").innerHTML=one+one; // doppelt fuer nahtlosen Loop
+}
+function buildCards(spots){
+  const box=document.getElementById("cards");box.innerHTML="";
+  spots.forEach(s=>{
+    const l=latest(s);const w=l?num(l.wind_ms)||0:0;const on=w>=thrVal();
+    const el=document.createElement("div");
+    el.className="coin"+(on?" foil":"");el.dataset.spot=s;
+    el.innerHTML=`
+      <div class="name">${s}</div>
+      <div class="regime">${l?(l.regime||""):"–"}</div>
+      <div class="val">${w.toFixed(1)}<span class="u"> m/s</span></div>
+      <div class="row"><span class="bft">Bft ${bft(w)} · ${(w*1.94384).toFixed(0)} kt</span>
+        <span class="sig ${on?'on':'off'}">${on?'🚀 FOILBAR':'💤 FLAT'}</span></div>
+      <div class="spark"><canvas></canvas></div>`;
+    el.addEventListener("click",()=>{document.getElementById("spot").value=s;render();});
+    box.appendChild(el);
+    sparkline(el.querySelector("canvas"),series(s),on?css("--green"):css("--red"));
+  });
+  markSelected();
+}
+function markSelected(){
+  const sel=document.getElementById("spot").value;
+  document.querySelectorAll(".coin").forEach(c=>c.classList.toggle("sel",c.dataset.spot===sel));
+}
+function sparkline(cv,data,color){
+  new Chart(cv,{type:"line",data:{labels:data.map((_,i)=>i),
+    datasets:[{data,borderColor:color,borderWidth:2,tension:.35,pointRadius:0,
+      fill:true,backgroundColor:ctx=>{const c=ctx.chart.ctx,g=c.createLinearGradient(0,0,0,40);
+        g.addColorStop(0,color+"55");g.addColorStop(1,color+"00");return g;}}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},
+      scales:{x:{display:false},y:{display:false}},elements:{line:{borderJoinStyle:"round"}}}});
+}
+
+// Chart.js Dark-Defaults + Glow
+Chart.defaults.color=css("--muted");
+Chart.defaults.font.family="'JetBrains Mono', monospace";
+Chart.defaults.borderColor="rgba(120,140,180,.10)";
+const glow=color=>({id:"glow",beforeDatasetsDraw(c){c.ctx.save();c.ctx.shadowColor=color;c.ctx.shadowBlur=12;},
+  afterDatasetsDraw(c){c.ctx.restore();}});
+
+function render(){
+  markSelected();
+  const spot=document.getElementById("spot").value,thr=thrVal();
+  const driver=document.getElementById("driver").value,onlyGood=document.getElementById("onlyGood").checked;
+  const rows=DATA.filter(o=>o.spot===spot&&o.wind_ms!=="");
+  const good=rows.filter(o=>(num(o.wind_ms)||0)>=thr);
+  const share=rows.length?Math.round(100*good.length/rows.length):0;
+  const topReg=(()=>{const c={};good.forEach(o=>{const k=REGIME[rkey(o.regime)].label;c[k]=(c[k]||0)+1;});
+    return Object.entries(c).sort((a,b)=>b[1]-a[1]).map(e=>e[0])[0]||"–";})();
+  const kpi=(v,l,cls="")=>`<div class="kpi ${cls}"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+  document.getElementById("kpis").innerHTML=
+    kpi(rows.length,"Stunden erfasst")+kpi(good.length,"foilbare Stunden","g")+
+    kpi(share+"%","Anteil ≥ Grenzwert","o")+kpi(topReg,"Top-Lage bei Wind");
+  drawTimeline(rows,thr);drawRegime(good);drawScatter(onlyGood?good:rows,driver);
+  document.getElementById("scatterSub").textContent=
+    "Wind gegen "+document.querySelector("#driver option:checked").textContent+" · Farbe = Lage";
+  buildTicker([...new Set(DATA.map(o=>o.spot))]);buildCards([...new Set(DATA.map(o=>o.spot))]);
+}
+const ft=t=>t.slice(5,16).replace("T"," ");
+const kill=id=>{if(charts[id]){charts[id].destroy();delete charts[id];}};
+
+function drawTimeline(rows,thr){
+  kill("timeline");
+  const labels=rows.map(o=>ft(o.time_local)),wind=rows.map(o=>num(o.wind_ms)),
+        pres=rows.map(o=>num(o.p_msl_hpa)),cols=rows.map(o=>rcol(o.regime));
+  charts.timeline=new Chart(document.getElementById("timeline"),{
+    data:{labels,datasets:[
+      {type:"line",label:"Wind m/s",data:wind,yAxisID:"y",borderColor:css("--green"),borderWidth:2,
+        tension:.3,pointBackgroundColor:cols,pointBorderColor:cols,pointRadius:3,pointHoverRadius:6,
+        fill:true,backgroundColor:ctx=>{const c=ctx.chart.ctx,g=c.createLinearGradient(0,0,0,360);
+          g.addColorStop(0,"rgba(0,230,118,.30)");g.addColorStop(1,"rgba(0,230,118,0)");return g;}},
+      {type:"line",label:"Grenzwert",data:labels.map(()=>thr),yAxisID:"y",borderColor:css("--gold"),
+        borderDash:[6,5],borderWidth:1.5,pointRadius:0},
+      {type:"line",label:"Luftdruck hPa",data:pres,yAxisID:"y1",borderColor:css("--blue"),
+        borderWidth:1.3,tension:.3,pointRadius:0},
+    ]},
+    plugins:[glow("rgba(0,230,118,.5)")],
+    options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+      plugins:{legend:{labels:{boxWidth:12,usePointStyle:true}},
+        tooltip:{backgroundColor:"#0a0e16",borderColor:css("--line"),borderWidth:1,
+          callbacks:{afterBody:it=>{const i=it[0].dataIndex;
+            return "Lage: "+(rows[i].regime||"–")+"\nRi "+(rows[i].sector||"–")+" · Böen "+(rows[i].gust_ms||"–")+" m/s";}}}},
+      scales:{y:{title:{display:true,text:"Wind m/s"},beginAtZero:true},
+        y1:{position:"right",title:{display:true,text:"hPa"},grid:{drawOnChartArea:false}},
+        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12}}}}
+  });
+}
+function drawRegime(good){
+  kill("byRegime");
+  const keys=Object.keys(REGIME),cnt=keys.map(k=>good.filter(o=>rkey(o.regime)===k).length);
+  const sh=keys.map((k,i)=>[k,cnt[i]]).filter(e=>e[1]>0);
+  charts.byRegime=new Chart(document.getElementById("byRegime"),{
+    type:"bar",data:{labels:sh.map(e=>REGIME[e[0]].label),
+      datasets:[{data:sh.map(e=>e[1]),backgroundColor:sh.map(e=>REGIME[e[0]].color),borderRadius:8}]},
+    plugins:[glow("rgba(255,176,32,.4)")],
+    options:{maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{beginAtZero:true,ticks:{precision:0},title:{display:true,text:"Stunden"}}}}
+  });
+}
+function drawScatter(rows,driver){
+  kill("scatter");
+  const pts=rows.map(o=>({x:num(o[driver]),y:num(o.wind_ms),c:rcol(o.regime),o}))
+    .filter(p=>p.x!==null&&p.y!==null);
+  charts.scatter=new Chart(document.getElementById("scatter"),{
+    type:"scatter",data:{datasets:[{data:pts,pointBackgroundColor:pts.map(p=>p.c),
+      pointBorderColor:pts.map(p=>p.c),pointRadius:4,pointHoverRadius:7}]},
+    plugins:[glow("rgba(34,211,238,.45)")],
+    options:{maintainAspectRatio:false,plugins:{legend:{display:false},
+      tooltip:{backgroundColor:"#0a0e16",callbacks:{label:c=>{const p=c.raw;
+        return ft(p.o.time_local)+" · "+p.y+" m/s · "+p.o.regime;}}}},
+      scales:{x:{title:{display:true,text:document.querySelector("#driver option:checked").textContent}},
+        y:{title:{display:true,text:"Wind m/s"},beginAtZero:true}}}
+  });
+}
+
+fetch("data/history.csv?"+Date.now()).then(r=>{if(!r.ok)throw 0;return r.text();})
+  .then(boot).catch(()=>{document.getElementById("empty").style.display="block";});
+document.getElementById("file").addEventListener("change",e=>{
+  const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>boot(rd.result);rd.readAsText(f);});
+</script>
+</body>
+</html>
