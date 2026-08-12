@@ -1,0 +1,74 @@
+# =============================================================================
+#  Wind-Alarm  –  Konfiguration
+# =============================================================================
+#  Datenquelle: Open-Meteo (nutzt MeteoSwiss ICON-CH1/CH2). Gratis, kein Key.
+#  Gemeldet wird der MITTLERE Wind 10 m über Boden (wind_speed_10m),
+#  NICHT die Böenspitzen und NICHT ein Höhen-/Bergwind.
+# =============================================================================
+
+[general]
+timezone      = "Europe/Zurich"
+forecast_days = 3          # Vorhersage-Horizont in Tagen (1–7; CH-Hochauflösung ~2–3 Tage)
+model         = "best_match"   # wählt automatisch ICON-CH1/CH2 für die Schweiz
+day_start_hour = 7         # nur Warnungen für Tagesstunden (lokal), z.B. 07–21 Uhr
+day_end_hour   = 21
+
+[alert]
+# Beaufort-Referenz für den 10-min-Mittelwind (m/s):
+#   Bft 2 = 1.6–3.3   Bft 3 = 3.4–5.4   Bft 4 = 5.5–7.9   Bft 5 = 8.0–10.7
+#
+# Gewarnt wird, wenn der mittlere Wind >= min_ms erreicht (optional <= max_ms).
+# Standard = 3.4 m/s (Beginn Bft 3 = "es wird foilbar").
+# --> Für Bft 2 (früheste Meldung) min_ms = 1.6 setzen.
+min_ms         = 3.4
+max_ms         = 0.0       # 0 = keine Obergrenze
+min_run_hours  = 2         # mind. so viele zusammenhängende Stunden über der Schwelle
+
+[telegram]
+# Empfohlen: Token & Chat-ID als Umgebungsvariablen / GitHub-Secrets setzen:
+#   TELEGRAM_TOKEN, TELEGRAM_CHAT_ID   (überschreiben die Werte hier)
+# Die Felder hier nur für lokalen Test füllen – NICHT ins öffentliche Git committen!
+token   = ""
+chat_id = ""
+
+# Druckdifferenz Alpensüd − Alpennord (hPa) als Föhn-Indikator.
+# Positiv & gross  => Südföhn-Tendenz (v.a. relevant am Urnersee).
+[foehn.south]
+name = "Lugano"
+lat  = 46.004
+lon  = 8.951
+[foehn.north]
+name = "Zuerich"
+lat  = 47.378
+lon  = 8.540
+
+# -----------------------------------------------------------------------------
+#  Spots  (Koordinaten auf Modell-Gitterzellen auf Seehöhe abgestimmt)
+#  Optional pro Spot überschreibbar: min_ms, max_ms, min_run_hours
+# -----------------------------------------------------------------------------
+[[spots]]
+name = "Greifensee"
+lat  = 47.352
+lon  = 8.685
+
+[[spots]]
+name = "Untersee (Steckborn)"
+lat  = 47.666
+lon  = 8.867
+# Hinweis: Modellzelle ~498 m (huegeliger Seeruecken, keine reine Wasserzelle) –
+# Windwert tendenziell leicht erhoeht, relativer Verlauf aber brauchbar.
+
+[[spots]]
+name = "Urnersee (Flueelen)"
+lat  = 46.910
+lon  = 8.618
+
+[[spots]]
+name = "Urnersee (Sisikon)"
+lat  = 46.958
+lon  = 8.610
+
+[[spots]]
+name = "Walensee (Tiefenwinkel)"
+lat  = 47.115
+lon  = 9.185

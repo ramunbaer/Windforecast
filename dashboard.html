@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wind-Logbuch · Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    /* HBT-Palette */
+    --blue:#8BAED8; --blue-dark:#5f86b3; --blue-tint:#e7eef6;
+    --orange:#D58D34; --black:#000; --grey:#B2B2B2; --grey-light:#e9e9e9;
+    /* Bereichsfarben (Kategorien = Wetterlagen) */
+    --r-suedfoehn:#B8A30D; --r-nordlage:#333333; --r-bise:#8BAED8;
+    --r-thermik:#8D942E; --r-gradient:#B2B2B2; --r-unbestimmt:#26BF86;
+    --bg:#f7f9fc; --card:#fff; --line:#e2e8f0; --ink:#1a2430;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  header{background:var(--blue);color:#fff;padding:20px 28px;}
+  header h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.2px;}
+  header p{margin:4px 0 0;font-size:13px;opacity:.92;}
+  main{max-width:1180px;margin:0 auto;padding:22px;}
+  .controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;background:var(--card);
+    border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:18px;}
+  .controls label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.6px;
+    color:#64748b;margin-bottom:5px;font-weight:600;}
+  select,input[type=number]{font:inherit;padding:8px 10px;border:1px solid var(--line);
+    border-radius:8px;background:#fff;color:var(--ink);min-width:150px;}
+  .toggle{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
+  .kpi .v{font-size:26px;font-weight:700;line-height:1;}
+  .kpi .l{font-size:12px;color:#64748b;margin-top:6px;}
+  .kpi.accent .v{color:var(--orange);}
+  .grid{display:grid;grid-template-columns:1fr;gap:18px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+  .card h2{margin:0 0 4px;font-size:15px;}
+  .card .sub{font-size:12px;color:#64748b;margin:0 0 12px;}
+  .chart-wrap{position:relative;height:320px;}
+  .chart-wrap.tall{height:360px;}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:12px;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:12px;height:12px;border-radius:3px;display:inline-block;}
+  .empty{padding:40px;text-align:center;color:#64748b;background:var(--card);
+    border:1px dashed var(--grey);border-radius:12px;}
+  .empty input[type=file]{margin-top:12px;}
+  footer{max-width:1180px;margin:0 auto;padding:0 22px 30px;font-size:12px;color:#64748b;}
+  a{color:var(--blue-dark);}
+  @media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<h2 class="sr-only">Dashboard des Wind-Logbuchs: zeigt je Spot den Windverlauf und die Wetterbedingungen (Luftdruck, Föhn, Bise, Thermik, Sonne), die bei Wind vorlagen.</h2>
+<header>
+  <h1>🌬️ Wind-Logbuch</h1>
+  <p>Bei welchen Bedingungen gab es Wind? Verlauf & Treiber je Spot · Datenquelle: Open-Meteo (ICON-CH)</p>
+</header>
+
+<main>
+  <div id="app" style="display:none">
+    <div class="controls">
+      <div>
+        <label for="spot">Spot</label>
+        <select id="spot"></select>
+      </div>
+      <div>
+        <label for="thr">Grenzwert Wind (m/s)</label>
+        <input id="thr" type="number" value="3.4" step="0.1" min="0">
+      </div>
+      <div>
+        <label for="driver">Treiber (x-Achse Streudiagramm)</label>
+        <select id="driver">
+          <option value="p_msl_hpa">Luftdruck (hPa)</option>
+          <option value="foehn_dp_hpa">Föhn-Δp Süd−Nord (hPa)</option>
+          <option value="radiation_wm2">Sonneneinstrahlung (W/m²)</option>
+          <option value="cloud_pct">Bewölkung (%)</option>
+        </select>
+      </div>
+      <div class="toggle">
+        <input id="onlyGood" type="checkbox" checked>
+        <label for="onlyGood" style="text-transform:none;letter-spacing:0;margin:0;font-weight:400;color:var(--ink)">nur Stunden mit Wind ≥ Grenzwert</label>
+      </div>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Zeitverlauf: Wind & Luftdruck</h2>
+        <p class="sub">Punkte nach Wetterlage eingefärbt · orange gestrichelt = Grenzwert · graue Linie = Luftdruck (rechte Achse)</p>
+        <div class="chart-wrap tall"><canvas id="timeline"></canvas></div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="card">
+        <h2>Foilbare Stunden nach Wetterlage</h2>
+        <p class="sub">Wie oft brachte welche Lage Wind ≥ Grenzwert?</p>
+        <div class="chart-wrap"><canvas id="byRegime"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Treiber-Streudiagramm</h2>
+        <p class="sub" id="scatterSub">Wind gegen gewählten Treiber · Farbe = Wetterlage</p>
+        <div class="chart-wrap"><canvas id="scatter"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="empty" class="empty">
+    <div>Noch keine Logbuch-Daten gefunden (<code>data/history.csv</code>).</div>
+    <div style="margin-top:6px;font-size:13px">Der stündliche Job befüllt sie automatisch. Zum lokalen Ansehen eine CSV wählen:</div>
+    <input type="file" id="file" accept=".csv">
+  </div>
+</main>
+
+<footer>
+  Farben = Wetterlagen: Südföhn, Nordlage, Bise, Thermik, Gradient. Die Föhn-Δp ist die
+  Luftdruckdifferenz Lugano−Zürich (positiv ⇒ Südföhn-Tendenz). Erstellt aus dem Wind-Alarm-Logbuch.
+</footer>
+
+<script>
+const REGIME = {
+  Suedfoehn:  {label:"Südföhn",   color:getVar("--r-suedfoehn")},
+  Nordlage:   {label:"Nordlage",  color:getVar("--r-nordlage")},
+  Bise:       {label:"Bise",      color:getVar("--r-bise")},
+  Thermik:    {label:"Thermik",   color:getVar("--r-thermik")},
+  Gradient:   {label:"Gradient",  color:getVar("--r-gradient")},
+  unbestimmt: {label:"unbestimmt",color:getVar("--r-unbestimmt")},
+};
+function getVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function regimeKey(r){
+  r=(r||"").trim();
+  for(const k of Object.keys(REGIME)) if(r.startsWith(k)) return k;
+  return "unbestimmt";
+}
+function regimeColor(r){return REGIME[regimeKey(r)].color;}
+
+// --- robuster CSV-Parser (behandelt Anführungszeichen mit Kommas) ---
+function parseCSV(text){
+  const rows=[]; let field="",row=[],inQ=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQ){
+      if(c==='"'){ if(text[i+1]==='"'){field+='"';i++;} else inQ=false; }
+      else field+=c;
+    }else{
+      if(c==='"') inQ=true;
+      else if(c===",") {row.push(field);field="";}
+      else if(c==="\n"||c==="\r"){ if(c==="\r"&&text[i+1]==="\n")i++; row.push(field);rows.push(row);row=[];field=""; }
+      else field+=c;
+    }
+  }
+  if(field!==""||row.length){row.push(field);rows.push(row);}
+  return rows.filter(r=>r.length>1 || (r.length===1&&r[0]!==""));
+}
+function toObjects(rows){
+  const head=rows[0]; return rows.slice(1).map(r=>{const o={};head.forEach((h,i)=>o[h]=r[i]);return o;});
+}
+const num=v=>{const x=parseFloat(v);return Number.isFinite(x)?x:null;};
+
+let DATA=[], charts={};
+function boot(text){
+  const objs=toObjects(parseCSV(text)).filter(o=>o.time_local);
+  if(!objs.length){return;}
+  DATA=objs;
+  document.getElementById("empty").style.display="none";
+  document.getElementById("app").style.display="block";
+  const spots=[...new Set(DATA.map(o=>o.spot))];
+  const sel=document.getElementById("spot");
+  sel.innerHTML=spots.map(s=>`<option>${s}</option>`).join("");
+  ["spot","thr","driver","onlyGood"].forEach(id=>
+    document.getElementById(id).addEventListener("input",render));
+  buildLegend();
+  render();
+}
+function buildLegend(){
+  document.getElementById("legend").innerHTML=Object.values(REGIME)
+    .map(r=>`<span><i class="dot" style="background:${r.color}"></i>${r.label}</span>`).join("");
+}
+
+function render(){
+  const spot=document.getElementById("spot").value;
+  const thr=parseFloat(document.getElementById("thr").value)||0;
+  const driver=document.getElementById("driver").value;
+  const onlyGood=document.getElementById("onlyGood").checked;
+  const rows=DATA.filter(o=>o.spot===spot && o.wind_ms!=="");
+  const good=rows.filter(o=>(num(o.wind_ms)||0)>=thr);
+
+  // KPIs
+  const share=rows.length?Math.round(100*good.length/rows.length):0;
+  const bestReg=topCount(good.map(o=>REGIME[regimeKey(o.regime)].label));
+  document.getElementById("kpis").innerHTML=`
+    ${kpi(rows.length,"Stunden erfasst")}
+    ${kpi(good.length,"foilbare Stunden","accent")}
+    ${kpi(share+"%","Anteil ≥ Grenzwert")}
+    ${kpi(bestReg||"–","häufigste Lage bei Wind")}`;
+
+  drawTimeline(rows,thr);
+  drawByRegime(good);
+  drawScatter(onlyGood?good:rows,driver,thr);
+  document.getElementById("scatterSub").textContent =
+    `Wind gegen ${document.querySelector('#driver option:checked').textContent} · Farbe = Wetterlage`;
+}
+const kpi=(v,l,cls="")=>`<div class="kpi ${cls}"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+function topCount(arr){const c={};arr.forEach(x=>c[x]=(c[x]||0)+1);
+  return Object.entries(c).sort((a,b)=>b[1]-a[1]).map(e=>e[0])[0];}
+
+function fmtTime(t){return t.slice(5,16).replace("T"," ");} // MM-DD HH:MM
+function destroy(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+
+function drawTimeline(rows,thr){
+  destroy("timeline");
+  const labels=rows.map(o=>fmtTime(o.time_local));
+  const wind=rows.map(o=>num(o.wind_ms));
+  const pres=rows.map(o=>num(o.p_msl_hpa));
+  const colors=rows.map(o=>regimeColor(o.regime));
+  charts.timeline=new Chart(document.getElementById("timeline"),{
+    data:{labels,datasets:[
+      {type:"line",label:"Wind (m/s)",data:wind,yAxisID:"y",
+        borderColor:getVar("--blue"),borderWidth:1.5,tension:.25,
+        pointBackgroundColor:colors,pointBorderColor:colors,pointRadius:3,pointHoverRadius:5},
+      {type:"line",label:"Grenzwert",data:labels.map(()=>thr),yAxisID:"y",
+        borderColor:getVar("--orange"),borderDash:[6,4],borderWidth:1.5,pointRadius:0},
+      {type:"line",label:"Luftdruck (hPa)",data:pres,yAxisID:"y1",
+        borderColor:getVar("--grey"),borderWidth:1.2,tension:.25,pointRadius:0},
+    ]},
+    options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+      plugins:{legend:{labels:{boxWidth:14}},
+        tooltip:{callbacks:{afterBody:(items)=>{
+          const i=items[0].dataIndex;return "Lage: "+(rows[i].regime||"–")+
+          "\nRichtung: "+(rows[i].sector||"–")+" · Böen "+(rows[i].gust_ms||"–")+" m/s";}}}},
+      scales:{
+        y:{title:{display:true,text:"Wind m/s"},beginAtZero:true},
+        y1:{position:"right",title:{display:true,text:"hPa"},grid:{drawOnChartArea:false}},
+        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12}}}}
+  });
+}
+
+function drawByRegime(good){
+  destroy("byRegime");
+  const keys=Object.keys(REGIME);
+  const counts=keys.map(k=>good.filter(o=>regimeKey(o.regime)===k).length);
+  const shown=keys.map((k,i)=>[k,counts[i]]).filter(e=>e[1]>0);
+  charts.byRegime=new Chart(document.getElementById("byRegime"),{
+    type:"bar",
+    data:{labels:shown.map(e=>REGIME[e[0]].label),
+      datasets:[{data:shown.map(e=>e[1]),
+        backgroundColor:shown.map(e=>REGIME[e[0]].color),borderRadius:6}]},
+    options:{maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{beginAtZero:true,title:{display:true,text:"Stunden"},ticks:{precision:0}}}}
+  });
+}
+
+function drawScatter(rows,driver,thr){
+  destroy("scatter");
+  const pts=rows.map(o=>({x:num(o[driver]),y:num(o.wind_ms),c:regimeColor(o.regime),o}))
+    .filter(p=>p.x!==null&&p.y!==null);
+  const xlabel=document.querySelector('#driver option:checked').textContent;
+  charts.scatter=new Chart(document.getElementById("scatter"),{
+    type:"scatter",
+    data:{datasets:[{data:pts,pointBackgroundColor:pts.map(p=>p.c),
+      pointBorderColor:pts.map(p=>p.c),pointRadius:4,pointHoverRadius:6}]},
+    options:{maintainAspectRatio:false,plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:(ctx)=>{const p=ctx.raw;
+        return `${p.o.time_local.slice(5,16).replace("T"," ")} · ${p.y} m/s · ${p.o.regime}`;}}}},
+      scales:{x:{title:{display:true,text:xlabel}},
+        y:{title:{display:true,text:"Wind m/s"},beginAtZero:true,
+           grid:{color:(c)=>c.tick.value===Math.round(thr)?getVar("--orange"):getVar("--grey-light")}}}}
+  });
+}
+
+// --- Daten laden: erst aus dem Repo, sonst Datei-Upload ---
+fetch("data/history.csv?"+Date.now()).then(r=>{if(!r.ok)throw 0;return r.text();})
+  .then(boot).catch(()=>{ document.getElementById("empty").style.display="block"; });
+document.getElementById("file").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const rd=new FileReader(); rd.onload=()=>boot(rd.result); rd.readAsText(f);
+});
+</script>
+</body>
+</html>
