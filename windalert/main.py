@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -202,6 +203,47 @@ def run(config_path: str = "config.toml", dry_run: bool = False) -> int:
         logbook.append_rows(DATA_DIR / "history.csv", rows)
         state.last_log_hour = cur_hour
         print(f"Logbuch: {len(rows)} Zeilen fuer {cur_hour} ergaenzt.")
+
+    # --- Prognose (naechste ~48 h) je Spot fuers Dashboard schreiben --------
+    fc_times = spot_data[0]["hourly"]["time"]
+    idx0 = _now_index(fc_times, now)
+    HORIZON = 48
+    fc_spots = []
+    for spot, d in zip(conf.spots, spot_data):
+        h = d["hourly"]
+        series = []
+        for k in range(idx0, min(idx0 + HORIZON, len(h["time"]))):
+            ws = h["wind_speed_10m"][k]
+            wd = h["wind_direction_10m"][k]
+            pmsl = h["pressure_msl"][k]
+            rad = h["shortwave_radiation"][k]
+            dp = foehn_dp[k] if k < len(foehn_dp) else None
+            series.append({
+                "t": h["time"][k],
+                "wind": None if ws is None else round(ws, 1),
+                "gust": None if h["wind_gusts_10m"][k] is None else round(h["wind_gusts_10m"][k], 1),
+                "dir": None if wd is None else round(wd),
+                "sector": "" if wd is None else drivers.wind_sector(wd),
+                "bft": None if ws is None else drivers.beaufort(ws),
+                "p_msl": None if pmsl is None else round(pmsl, 1),
+                "rad": rad,
+                "cloud": h["cloud_cover"][k],
+                "regime": drivers.classify_regime(wd, dp, pmsl, rad, _parse(h["time"][k]).hour),
+            })
+        fc_spots.append({"name": spot.name, "min_ms": spot.min_ms,
+                         "webcam": spot.webcam, "lat": spot.lat, "lon": spot.lon,
+                         "series": series})
+    forecast = {
+        "generated": now.isoformat(timespec="minutes"),
+        "day_start": conf.day_start_hour, "day_end": conf.day_end_hour,
+        # Koordinaten fuer den clientseitigen Live-Abruf (Dashboard holt Open-Meteo direkt)
+        "foehn": {"south": {"lat": conf.foehn_south.lat, "lon": conf.foehn_south.lon},
+                  "north": {"lat": conf.foehn_north.lat, "lon": conf.foehn_north.lon}},
+        "spots": fc_spots,
+    }
+    (DATA_DIR / "forecast.json").write_text(
+        json.dumps(forecast, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    print(f"Prognose geschrieben: {len(fc_spots)} Spots x bis {HORIZON} h.")
 
     state.save()
     print(f"Fertig. {n_alerts} neue Warnung(en) gesendet. Lokalzeit: {now:%Y-%m-%d %H:%M}")

@@ -10,7 +10,11 @@ protokolliert nebenbei die Bedingungen (Druck, Windrichtung, Föhn/Bise, Sonne),
 damit du mit der Zeit erkennst, welche Wetterlage an welchem Spot Wind bringt.
 
 **Spots:** Greifensee · Untersee (Steckborn) · Urnersee (Flüelen) ·
-Urnersee (Sisikon) · Walensee (Tiefenwinkel)
+Urnersee (Sisikon) · Walensee (Tiefenwinkel) · Silvaplana (Engadin) ·
+Zürichsee (Stäfa) · Zürichsee (Nuolen)
+
+Jeder Spot hat eine hinterlegte **Live-Webcam** (Windfinder bzw. kitesailing.ch) zum
+Abgleich der Prognose – im Dashboard je Spot als 📷-Link.
 
 **Datenquelle:** [Open-Meteo](https://open-meteo.com) mit den MeteoSwiss-Modellen
 ICON-CH1/CH2. Gratis, kein API-Key. **Betrieb:** GitHub Actions (stündlich, gratis).
@@ -114,10 +118,16 @@ Ausgabe je Spot: Anteil foilbarer Stunden, häufigste **Wetterlagen**,
 
 [`index.html`](index.html) ist ein Dashboard im Krypto-Terminal-Stil (dark, Neon):
 Ticker-Leiste, **Portfolio-Karten je Spot** (aktueller Wind, Bft, Sparkline,
-FOILBAR/FLAT-Signal) und je gewähltem Spot **Windverlauf + Luftdruck**, **foilbare
-Stunden pro Wetterlage** und ein **Treiber-Streudiagramm** (Wind gegen Luftdruck /
-Föhn-Δp / Sonneneinstrahlung / Bewölkung) – so siehst du auf einen Blick, bei welchen
-Bedingungen es Wind gab.
+FOILBAR/FLAT-Signal, „nächstes Fenster"-Vorschau und 📷-Webcam-Link).
+
+**Klick auf einen Spot** zeigt darunter die **48-Stunden-Prognose** (Windverlauf +
+Böen, Grenzwertlinie, farbige Wetterlage, plus Chips für die foilbaren Fenster) und
+im Rückblick aus dem Logbuch: **Windverlauf + Luftdruck**, **foilbare Stunden pro
+Wetterlage** und ein **Treiber-Streudiagramm** (Wind gegen Luftdruck / Föhn-Δp /
+Sonneneinstrahlung / Bewölkung).
+
+Datenquellen der Seite: `data/forecast.json` (48-h-Prognose, vom Job je Lauf neu
+geschrieben) und `data/history.csv` (Logbuch-Verlauf).
 
 **Lokal ansehen** (lädt `data/history.csv` per `fetch`, braucht also einen kleinen
 Server – Doppelklick genügt wegen Browser-Sicherheit nicht):
@@ -172,5 +182,5 @@ Windforecast/
 ├─ index.html               # Web-Dashboard „$WINDFOLIO" (Chart.js, Trading-Look)
 ├─ .github/workflows/wind.yml
 ├─ .claude/launch.json      # lokaler Server für das Dashboard
-└─ data/                    # history.csv + state.json (vom Job erzeugt)
+└─ data/                    # forecast.json + history.csv + state.json (vom Job erzeugt)
 ```

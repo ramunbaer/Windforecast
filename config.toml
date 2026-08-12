@@ -47,29 +47,57 @@ lon  = 8.540
 #  Spots  (Koordinaten auf Modell-Gitterzellen auf Seehöhe abgestimmt)
 #  Optional pro Spot überschreibbar: min_ms, max_ms, min_run_hours
 # -----------------------------------------------------------------------------
-[[spots]]
-name = "Greifensee"
-lat  = 47.352
-lon  = 8.685
+# webcam = Live-Webcam in Spot-Naehe zum Abgleich der Prognose (im Dashboard verlinkt).
 
 [[spots]]
-name = "Untersee (Steckborn)"
-lat  = 47.666
-lon  = 8.867
+name   = "Greifensee"
+lat    = 47.352
+lon    = 8.685
+webcam = "https://www.windfinder.com/webcams/greifensee_muellerwis_seilerwis_zurich_switzerland"
+
+[[spots]]
+name   = "Untersee (Steckborn)"
+lat    = 47.666
+lon    = 8.867
+webcam = "https://www.windfinder.com/webcams/untersee_steckborn_west"
 # Hinweis: Modellzelle ~498 m (huegeliger Seeruecken, keine reine Wasserzelle) –
 # Windwert tendenziell leicht erhoeht, relativer Verlauf aber brauchbar.
 
 [[spots]]
-name = "Urnersee (Flueelen)"
-lat  = 46.910
-lon  = 8.618
+name   = "Urnersee (Flueelen)"
+lat    = 46.910
+lon    = 8.618
+webcam = "https://www.windfinder.com/webcams/urnersee_flueelen_gruonbach"
 
 [[spots]]
-name = "Urnersee (Sisikon)"
-lat  = 46.958
-lon  = 8.610
+name   = "Urnersee (Sisikon)"
+lat    = 46.958
+lon    = 8.610
+webcam = "https://www.windfinder.com/webcams/urnersee_sisikon"
 
 [[spots]]
-name = "Walensee (Tiefenwinkel)"
-lat  = 47.115
-lon  = 9.185
+name   = "Walensee (Tiefenwinkel)"
+lat    = 47.115
+lon    = 9.185
+webcam = "https://www.windfinder.com/webcams/murg_walensee"
+
+[[spots]]
+name   = "Silvaplana"
+lat    = 46.450
+lon    = 9.790
+webcam = "https://www.kitesailing.ch/en/spot/webcam"
+# Engadin, Seehoehe ~1790 m. Klassischer Maloja-Thermikwind (starker Nachmittagswind).
+
+[[spots]]
+name   = "Zuerichsee (Staefa)"
+lat    = 47.233
+lon    = 8.725
+webcam = "https://www.windfinder.com/webcams/staefa_zuerichsee"
+# Rechtes Zuerichsee-Ufer, Seeclub-Windsurfrevier.
+
+[[spots]]
+name   = "Zuerichsee (Nuolen)"
+lat    = 47.195
+lon    = 8.830
+webcam = "https://www.windfinder.com/webcams/nuolen"
+# Obersee (SZ) – bekanntester Wind-/Kitespot am oberen Zuerichsee.
