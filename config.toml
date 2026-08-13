@@ -53,13 +53,13 @@ lon  = 8.540
 name   = "Greifensee"
 lat    = 47.352
 lon    = 8.685
-webcam = "https://www.windfinder.com/webcams/greifensee_muellerwis_seilerwis_zurich_switzerland"
+webcam = "https://www.greifenseewetter.ch/"
 
 [[spots]]
 name   = "Untersee (Steckborn)"
 lat    = 47.666
 lon    = 8.867
-webcam = "https://www.windfinder.com/webcams/untersee_steckborn_west"
+webcam = "https://www.wscs.ch/webcam/"
 # Hinweis: Modellzelle ~498 m (huegeliger Seeruecken, keine reine Wasserzelle) –
 # Windwert tendenziell leicht erhoeht, relativer Verlauf aber brauchbar.
 
@@ -67,19 +67,19 @@ webcam = "https://www.windfinder.com/webcams/untersee_steckborn_west"
 name   = "Urnersee (Flueelen)"
 lat    = 46.910
 lon    = 8.618
-webcam = "https://www.windfinder.com/webcams/urnersee_flueelen_gruonbach"
+webcam = "https://www.windsurfing-urnersee.ch/ueber-uns/wetter-und-webcam"
 
 [[spots]]
 name   = "Urnersee (Sisikon)"
 lat    = 46.958
 lon    = 8.610
-webcam = "https://www.windfinder.com/webcams/urnersee_sisikon"
+webcam = "http://bhsboots.myhostpoint.ch/kamera04.jpg"
 
 [[spots]]
 name   = "Walensee (Tiefenwinkel)"
 lat    = 47.115
 lon    = 9.185
-webcam = "https://www.windfinder.com/webcams/murg_walensee"
+webcam = "https://www.walensee.cam/webcam/Tiefenwinkel%20-%20Felswand"
 
 [[spots]]
 name   = "Silvaplana"
@@ -92,12 +92,13 @@ webcam = "https://www.kitesailing.ch/en/spot/webcam"
 name   = "Zuerichsee (Staefa)"
 lat    = 47.233
 lon    = 8.725
-webcam = "https://www.windfinder.com/webcams/staefa_zuerichsee"
-# Rechtes Zuerichsee-Ufer, Seeclub-Windsurfrevier.
+webcam = "https://www.scstaefa.ch/webcam-und-wetter"
+# Rechtes Zuerichsee-Ufer, Seeclub-Windsurfrevier. Cam: Segelclub Staefa.
 
 [[spots]]
 name   = "Zuerichsee (Nuolen)"
 lat    = 47.195
 lon    = 8.830
-webcam = "https://www.windfinder.com/webcams/nuolen"
+webcam = "https://www.buur.ch/pw.jpg"
 # Obersee (SZ) – bekanntester Wind-/Kitespot am oberen Zuerichsee.
+# Cam: Altendorf/Seedamm (naechste Live-Cam am Obersee, Blick ueber den See).
