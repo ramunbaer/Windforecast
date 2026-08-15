@@ -46,7 +46,15 @@
     "Urnersee (Flueelen)|2026-08-15T14:00": "2026-08-15T04:08",
     "Walensee (Tiefenwinkel)|2026-08-15T14:00": "2026-08-15T04:08",
     "Greifensee|2026-08-17T15:00": "2026-08-15T06:20",
-    "Untersee (Steckborn)|2026-08-17T08:00": "2026-08-15T06:20"
+    "Untersee (Steckborn)|2026-08-17T08:00": "2026-08-15T06:20",
+    "Greifensee|2026-08-15T18:00": "2026-08-15T07:16",
+    "Greifensee|2026-08-16T12:00": "2026-08-15T07:16",
+    "Urnersee (Flueelen)|2026-08-16T13:00": "2026-08-15T07:16",
+    "Urnersee (Sisikon)|2026-08-15T16:00": "2026-08-15T07:16",
+    "Walensee (Tiefenwinkel)|2026-08-15T15:00": "2026-08-15T07:16",
+    "Silvaplana|2026-08-15T12:00": "2026-08-15T07:16",
+    "Zuerichsee (Staefa)|2026-08-16T11:00": "2026-08-15T07:16",
+    "Zuerichsee (Nuolen)|2026-08-16T11:00": "2026-08-15T07:16"
   },
-  "last_log_hour": "2026-08-15T06"
+  "last_log_hour": "2026-08-15T07"
 }
