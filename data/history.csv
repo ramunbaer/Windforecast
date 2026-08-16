@@ -577,3 +577,11 @@ time_local,spot,wind_ms,gust_ms,dir_deg,sector,beaufort,p_msl_hpa,surface_p_hpa,
 2026-08-16T06:00,Silvaplana,0.5,1.4,338,NNW,1,1020.5,828.1,13.8,86,0.0,-0.1,Gradient NNW
 2026-08-16T06:00,Zuerichsee (Staefa),0.6,1.1,45,NO,1,1014.7,968.5,22.5,72,0.0,-0.1,Gradient NO
 2026-08-16T06:00,Zuerichsee (Nuolen),1.7,2.7,152,SSO,2,1014.8,968.5,22.1,60,0.0,-0.1,Gradient SSO
+2026-08-16T07:00,Greifensee,0.3,1.5,315,NW,1,1015.4,965.4,19.7,69,11.0,-0.6,Gradient NW
+2026-08-16T07:00,Untersee (Steckborn),1.0,2.2,349,N,1,1015.4,958.1,17.9,92,11.0,-0.6,Gradient N
+2026-08-16T07:00,Urnersee (Flueelen),3.1,5.8,75,ONO,2,1016.0,966.0,19.5,0,10.0,-0.6,Gradient ONO
+2026-08-16T07:00,Urnersee (Sisikon),0.9,1.4,167,SSO,1,1015.1,965.7,22.6,0,10.0,-0.6,Gradient SSO
+2026-08-16T07:00,Walensee (Tiefenwinkel),2.9,5.1,196,SSW,2,1016.1,968.4,23.0,39,12.0,-0.6,Gradient SSW
+2026-08-16T07:00,Silvaplana,0.5,0.9,112,OSO,1,1020.3,828.2,14.3,90,9.0,-0.6,Gradient OSO
+2026-08-16T07:00,Zuerichsee (Staefa),1.1,1.6,297,WNW,1,1015.1,968.8,22.1,68,10.0,-0.6,Gradient WNW
+2026-08-16T07:00,Zuerichsee (Nuolen),1.4,2.6,205,SSW,1,1015.1,968.8,22.2,60,11.0,-0.6,Gradient SSW
