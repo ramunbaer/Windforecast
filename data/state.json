@@ -120,7 +120,9 @@
     "Zuerichsee (Staefa)|2026-08-19T12:00": "2026-08-17T06:32",
     "Zuerichsee (Nuolen)|2026-08-17T10:00": "2026-08-17T06:32",
     "Zuerichsee (Nuolen)|2026-08-17T17:00": "2026-08-17T06:32",
-    "Zuerichsee (Nuolen)|2026-08-18T10:00": "2026-08-17T06:32"
+    "Zuerichsee (Nuolen)|2026-08-18T10:00": "2026-08-17T06:32",
+    "Untersee (Steckborn)|2026-08-17T12:00": "2026-08-17T10:32",
+    "Zuerichsee (Staefa)|2026-08-17T11:00": "2026-08-17T10:32"
   },
-  "last_log_hour": "2026-08-17T09"
+  "last_log_hour": "2026-08-17T10"
 }
