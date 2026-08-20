@@ -1,6 +1,5 @@
 {
   "notified": {
-    "Zuerichsee (Staefa)|2026-08-17T17:00": "2026-08-16T20:15",
     "Greifensee|2026-08-18T13:00": "2026-08-16T23:11",
     "Untersee (Steckborn)|2026-08-18T12:00": "2026-08-16T23:11",
     "Zuerichsee (Staefa)|2026-08-18T12:00": "2026-08-16T23:11",
@@ -89,5 +88,5 @@
     "Urnersee (Sisikon)|2026-08-21T11:00": "2026-08-20T19:20",
     "Zuerichsee (Staefa)|2026-08-22T15:00": "2026-08-20T19:20"
   },
-  "last_log_hour": "2026-08-20T19"
+  "last_log_hour": "2026-08-20T20"
 }
