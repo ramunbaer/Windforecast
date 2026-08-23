@@ -1,6 +1,5 @@
 {
   "notified": {
-    "Untersee (Steckborn)|2026-08-20T12:00": "2026-08-19T19:18",
     "Untersee (Steckborn)|2026-08-20T10:00": "2026-08-19T22:16",
     "Silvaplana|2026-08-20T18:00": "2026-08-19T22:16",
     "Zuerichsee (Staefa)|2026-08-20T10:00": "2026-08-19T22:16",
@@ -77,5 +76,5 @@
     "Untersee (Steckborn)|2026-08-24T15:00": "2026-08-22T22:12",
     "Greifensee|2026-08-24T17:00": "2026-08-23T04:18"
   },
-  "last_log_hour": "2026-08-23T19"
+  "last_log_hour": "2026-08-23T20"
 }
