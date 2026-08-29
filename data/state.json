@@ -1,9 +1,5 @@
 {
   "notified": {
-    "Untersee (Steckborn)|2026-08-27T16:00": "2026-08-25T12:22",
-    "Urnersee (Flueelen)|2026-08-27T16:00": "2026-08-25T12:22",
-    "Urnersee (Sisikon)|2026-08-27T16:00": "2026-08-25T12:22",
-    "Urnersee (Flueelen)|2026-08-27T07:00": "2026-08-25T13:18",
     "Greifensee|2026-08-27T16:00": "2026-08-25T19:23",
     "Urnersee (Flueelen)|2026-08-27T12:00": "2026-08-25T19:23",
     "Urnersee (Flueelen)|2026-08-27T11:00": "2026-08-25T22:18",
@@ -72,7 +68,14 @@
     "Zuerichsee (Staefa)|2026-08-31T11:00": "2026-08-29T04:56",
     "Zuerichsee (Nuolen)|2026-08-31T16:00": "2026-08-29T04:56",
     "Zuerichsee (Staefa)|2026-08-31T17:00": "2026-08-29T11:39",
-    "Zuerichsee (Nuolen)|2026-08-29T16:00": "2026-08-29T11:39"
+    "Zuerichsee (Nuolen)|2026-08-29T16:00": "2026-08-29T11:39",
+    "Greifensee|2026-08-30T14:00": "2026-08-29T16:49",
+    "Untersee (Steckborn)|2026-08-29T15:00": "2026-08-29T16:49",
+    "Silvaplana|2026-08-31T12:00": "2026-08-29T16:49",
+    "Zuerichsee (Staefa)|2026-08-29T17:00": "2026-08-29T16:49",
+    "Zuerichsee (Staefa)|2026-08-31T09:00": "2026-08-29T16:49",
+    "Zuerichsee (Staefa)|2026-08-31T12:00": "2026-08-29T16:49",
+    "Zuerichsee (Nuolen)|2026-08-31T09:00": "2026-08-29T16:49"
   },
-  "last_log_hour": "2026-08-29T11"
+  "last_log_hour": "2026-08-29T16"
 }
