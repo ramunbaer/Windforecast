@@ -1,4 +1,6 @@
 # Bei parallelen Laeufen die Logbuch-Zeilen zusammenfuehren (alle behalten)
 data/history.csv merge=union
-# Bei state.json im Konflikt die Version des rebasenden Laufs behalten (Treiber "ours")
-data/state.json  merge=ours
+# Generierte JSONs im Konflikt: Version des rebasenden Laufs behalten (Treiber "ours")
+data/state.json        merge=ours
+data/forecast.json     merge=ours
+data/measurements.json merge=ours

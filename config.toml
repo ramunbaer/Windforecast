@@ -34,7 +34,7 @@ chat_id = "8835818255"
 # Optionaler Kanal fuer Broadcast an mehrere Leute (Bot muss Admin im Kanal sein).
 # Oeffentlicher Kanal: "@meinkanal"  |  privater Kanal: numerische ID "-100xxxxxxxxxx".
 # Gesendet wird an chat_id UND channel (beide, sofern gesetzt).
-channel = ""
+channel = "@Wingfoil_alert"
 
 # Druckdifferenz Alpensüd − Alpennord (hPa) als Föhn-Indikator.
 # Positiv & gross  => Südföhn-Tendenz (v.a. relevant am Urnersee).
