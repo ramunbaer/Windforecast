@@ -126,8 +126,16 @@ im Rückblick aus dem Logbuch: **Windverlauf + Luftdruck**, **foilbare Stunden p
 Wetterlage** und ein **Treiber-Streudiagramm** (Wind gegen Luftdruck / Föhn-Δp /
 Sonneneinstrahlung / Bewölkung).
 
-Datenquellen der Seite: `data/forecast.json` (48-h-Prognose, vom Job je Lauf neu
-geschrieben) und `data/history.csv` (Logbuch-Verlauf).
+**Live-Messung je Spot:** Zusätzlich zur Prognose zeigt die Seite die **realen
+Messwerte der nächsten MeteoSchweiz-Station** (Open Data, 10-Min-Werte) – aktueller
+Wind/Richtung/Böen auf jeder Karte plus ein **6-Stunden-Verlauf** im Panel „📡 Messung".
+So lässt sich die Vorhersage direkt gegen die Realität abgleichen. (MeteoSchweiz setzt
+kein CORS, daher holt der Job die Werte serverseitig; Aktualisierung im Job-Takt.)
+
+Datenquellen der Seite: `data/forecast.json` (48-h-Prognose), `data/measurements.json`
+(Stations-Messwerte + 6-h-Verlauf) und `data/history.csv` (Logbuch-Verlauf) – alle vom
+Job je Lauf neu geschrieben. Die **Prognose** wird zusätzlich im Browser live von
+Open-Meteo aktualisiert (alle 10 Min).
 
 **Lokal ansehen** (lädt `data/history.csv` per `fetch`, braucht also einen kleinen
 Server – Doppelklick genügt wegen Browser-Sicherheit nicht):

@@ -47,19 +47,25 @@ lon  = 8.540
 #  Spots  (Koordinaten auf Modell-Gitterzellen auf Seehöhe abgestimmt)
 #  Optional pro Spot überschreibbar: min_ms, max_ms, min_run_hours
 # -----------------------------------------------------------------------------
-# webcam = Live-Webcam in Spot-Naehe zum Abgleich der Prognose (im Dashboard verlinkt).
+# webcam       = Live-Webcam in Spot-Naehe zum Abgleich der Prognose (im Dashboard verlinkt).
+# station      = naechste MeteoSchweiz-Messstation (Open Data) fuer Live-Messwerte + 6h-Verlauf.
+# station_name = Anzeigename der Station.
 
 [[spots]]
 name   = "Greifensee"
 lat    = 47.352
 lon    = 8.685
 webcam = "https://www.greifenseewetter.ch/"
+station = "PFA"
+station_name = "Pfaeffikon ZH (~6 km)"
 
 [[spots]]
 name   = "Untersee (Steckborn)"
 lat    = 47.666
 lon    = 8.867
 webcam = "https://www.wscs.ch/webcam/"
+station = "STK"
+station_name = "Steckborn"
 # Hinweis: Modellzelle ~498 m (huegeliger Seeruecken, keine reine Wasserzelle) –
 # Windwert tendenziell leicht erhoeht, relativer Verlauf aber brauchbar.
 
@@ -68,24 +74,32 @@ name   = "Urnersee (Flueelen)"
 lat    = 46.910
 lon    = 8.618
 webcam = "https://www.windsurfing-urnersee.ch/ueber-uns/wetter-und-webcam"
+station = "ALT"
+station_name = "Altdorf (~3 km)"
 
 [[spots]]
 name   = "Urnersee (Sisikon)"
 lat    = 46.958
 lon    = 8.610
 webcam = "http://bhsboots.myhostpoint.ch/kamera04.jpg"
+station = "ALT"
+station_name = "Altdorf (~8 km)"
 
 [[spots]]
 name   = "Walensee (Tiefenwinkel)"
 lat    = 47.115
 lon    = 9.185
 webcam = "https://www.walensee.cam/webcam/Tiefenwinkel%20-%20Felswand"
+station = "QUI"
+station_name = "Quinten (~3 km)"
 
 [[spots]]
 name   = "Silvaplana"
 lat    = 46.450
 lon    = 9.790
 webcam = "https://www.kitesailing.ch/en/spot/webcam"
+station = "SIA"
+station_name = "Segl-Maria (~3 km)"
 # Engadin, Seehoehe ~1790 m. Klassischer Maloja-Thermikwind (starker Nachmittagswind).
 
 [[spots]]
@@ -93,6 +107,8 @@ name   = "Zuerichsee (Staefa)"
 lat    = 47.233
 lon    = 8.725
 webcam = "https://www.scstaefa.ch/webcam-und-wetter"
+station = "WAE"
+station_name = "Waedenswil (~4 km)"
 # Rechtes Zuerichsee-Ufer, Seeclub-Windsurfrevier. Cam: Segelclub Staefa.
 
 [[spots]]
@@ -100,5 +116,7 @@ name   = "Zuerichsee (Nuolen)"
 lat    = 47.195
 lon    = 8.830
 webcam = "https://www.buur.ch/pw.jpg"
+station = "SCM"
+station_name = "Schmerikon (~9 km)"
 # Obersee (SZ) – bekanntester Wind-/Kitespot am oberen Zuerichsee.
 # Cam: Altendorf/Seedamm (naechste Live-Cam am Obersee, Blick ueber den See).

@@ -80,6 +80,8 @@
     text-decoration:none;border:1px solid rgba(34,211,238,.35);border-radius:999px;padding:3px 9px;transition:background .15s}
   .cam:hover{background:rgba(34,211,238,.14)}
   #fcCam{margin-left:12px;font-size:12px;vertical-align:middle}
+  #measStation{color:var(--muted);font-size:12px;font-weight:400;margin-left:8px}
+  .coin .meas{font-size:10.5px;color:var(--cyan);margin-top:6px;letter-spacing:.3px}
   .spark{height:36px;margin-top:6px}
 
   .controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;border:1px solid var(--line);
@@ -184,6 +186,12 @@
       <div class="windows" id="windows"></div>
       <div class="chart tall"><canvas id="forecast"></canvas></div>
       <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h2>📡 Messung · letzte 6 h <span id="measStation"></span></h2>
+      <p class="sub" id="measSub">reale Station-Messwerte (MeteoSchweiz, 10-Min) zum Abgleich mit der Prognose</p>
+      <div class="chart"><canvas id="measChart"></canvas></div>
     </div>
 
     <div class="eyebrow">▚ Rückblick · welche Bedingungen brachten Wind</div>
@@ -300,6 +308,7 @@ function render(){
   buildCards(thr);markSelected();
   buildTicker(thr);
   drawForecast(spot,thr);
+  drawMeasurement(spot,thr);
   // Rückblick aus Logbuch
   const rows=HIST.filter(o=>o.spot===spot&&o.wind_ms!=="");
   const good=rows.filter(o=>(num(o.wind_ms)||0)>=thr);
@@ -344,6 +353,7 @@ function buildCards(thr){
       <div class="row"><span class="bft">Bft ${bft(cur.wind)} · ${(cur.wind*1.94384).toFixed(0)} kt</span>
         <span class="sig ${on?'on':'off'}">${on?'🚀 FOILBAR':'💤 FLAT'}</span></div>
       ${peek}
+      ${(()=>{const m=measOf(name);return (m&&m.current)?`<div class="meas">📡 gemessen ${m.current.wind} m/s ${m.current.dir!=null?wsector(m.current.dir):""} · ${m.station} ${m.current.t.slice(11,16)}</div>`:"";})()}
       ${cam?`<a class="cam" href="${cam}" target="_blank" rel="noopener">📷 Webcam ↗</a>`:""}
       <div class="spark"><canvas></canvas></div>`;
     el.addEventListener("click",()=>{document.getElementById("spot").value=name;render();
@@ -411,6 +421,37 @@ function drawForecast(spot,thr){
   });
 }
 
+function drawMeasurement(spot,thr){
+  kill("measChart");
+  const m=measOf(spot);
+  const stEl=document.getElementById("measStation"),sub=document.getElementById("measSub");
+  const series=(m&&m.series)?m.series.filter(e=>e.wind!=null):[];
+  if(!m||!series.length){
+    stEl.textContent="";
+    sub.textContent="Keine Live-Messung verfügbar (Station meldet gerade nicht).";
+    return;
+  }
+  stEl.textContent="· "+(m.station_name||m.station);
+  const cur=m.current;
+  if(cur){const kt=(cur.wind*1.94384).toFixed(0);
+    sub.innerHTML=`Jetzt gemessen: <b style="color:var(--green)">${cur.wind} m/s</b> (${kt} kt, Bft ${bft(cur.wind)}) · Ri ${cur.dir!=null?wsector(cur.dir)+" ("+cur.dir+"°)":"–"} · Böen ${cur.gust??"–"} m/s · Stand ${cur.t.slice(11,16)} Uhr`;}
+  const labels=series.map(e=>e.t.slice(11,16)),wind=series.map(e=>e.wind),gust=series.map(e=>e.gust);
+  charts.measChart=new Chart(document.getElementById("measChart"),{
+    data:{labels,datasets:[
+      {type:"line",label:"Wind m/s (gemessen)",data:wind,borderColor:css("--green"),borderWidth:2,tension:.3,
+        pointRadius:0,fill:true,backgroundColor:ctx=>{const c=ctx.chart.ctx,g=c.createLinearGradient(0,0,0,330);
+          g.addColorStop(0,"rgba(0,230,118,.28)");g.addColorStop(1,"rgba(0,230,118,0)");return g;}},
+      {type:"line",label:"Grenzwert",data:labels.map(()=>thr),borderColor:css("--gold"),borderDash:[6,5],borderWidth:1.5,pointRadius:0},
+      {type:"line",label:"Böen m/s",data:gust,borderColor:"rgba(255,59,92,.55)",borderWidth:1,tension:.3,pointRadius:0},
+    ]},
+    plugins:[glow("rgba(0,230,118,.5)")],
+    options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+      plugins:{legend:{labels:{boxWidth:12,usePointStyle:true}},
+        tooltip:{backgroundColor:"#0a0e16"}},
+      scales:{y:{title:{display:true,text:"Wind m/s"},beginAtZero:true},
+        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:10}}}}
+  });
+}
 function drawTimeline(rows,thr){
   kill("timeline");
   const labels=rows.map(o=>ft(o.time_local)),wind=rows.map(o=>num(o.wind_ms)),
@@ -462,10 +503,11 @@ function drawScatter(rows,driver){
 // ---- Live-Datenabruf direkt von Open-Meteo (clientseitig, CORS, kein Key) ----
 const OM="https://api.open-meteo.com/v1/forecast";
 const HV=["wind_speed_10m","wind_direction_10m","wind_gusts_10m","surface_pressure","pressure_msl","temperature_2m","cloud_cover","shortwave_radiation"];
-let REG=null,FALLBACK=null,booted=false;
+let REG=null,FALLBACK=null,booted=false,MEAS=null,MEASGEN="";
 
 async function loadCommitted(){
-  // forecast.json = Spot-Register (Koordinaten/Webcam) + Fallback; history.csv = Rückblick
+  // forecast.json = Spot-Register (Koordinaten/Webcam) + Fallback; history.csv = Rückblick;
+  // measurements.json = Live-Messwerte der MeteoSchweiz-Station (10-min, letzte 6h)
   try{const r=await fetch("data/forecast.json?"+Date.now());
     if(r.ok){const j=await r.json();FALLBACK=j;
       if(j.spots&&j.spots[0]&&j.spots[0].lat!=null&&j.foehn)
@@ -473,7 +515,10 @@ async function loadCommitted(){
              foehn:j.foehn,day_start:j.day_start,day_end:j.day_end};}}catch(e){}
   try{const r=await fetch("data/history.csv?"+Date.now());
     if(r.ok)HIST=obj(parseCSV(await r.text())).filter(o=>o.time_local);}catch(e){}
+  try{const r=await fetch("data/measurements.json?"+Date.now());
+    if(r.ok){const j=await r.json();MEAS={};(j.spots||[]).forEach(s=>MEAS[s.name]=s);MEASGEN=j.generated||"";}}catch(e){}
 }
+const measOf=name=>MEAS?MEAS[name]:null;
 async function fetchLive(){
   if(!REG||!REG.spots.length)return false;
   const pts=REG.spots.concat([REG.foehn.south,REG.foehn.north]);

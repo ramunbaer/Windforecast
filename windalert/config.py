@@ -16,6 +16,8 @@ class Spot:
     max_ms: float
     min_run_hours: int
     webcam: str = ""
+    station: str = ""
+    station_name: str = ""
 
 
 @dataclass
@@ -65,6 +67,8 @@ def load(path: str | Path = "config.toml") -> Config:
                 max_ms=float(s.get("max_ms", d_max)),
                 min_run_hours=int(s.get("min_run_hours", d_run)),
                 webcam=str(s.get("webcam", "")).strip(),
+                station=str(s.get("station", "")).strip(),
+                station_name=str(s.get("station_name", "")).strip(),
             )
         )
 

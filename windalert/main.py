@@ -15,7 +15,7 @@ for _stream in (sys.stdout, sys.stderr):
         pass
 
 from . import config as cfg
-from . import drivers, logbook, meteo
+from . import drivers, logbook, measurements, meteo
 from .notify import send_telegram
 from .state import State
 
@@ -244,6 +244,17 @@ def run(config_path: str = "config.toml", dry_run: bool = False) -> int:
     (DATA_DIR / "forecast.json").write_text(
         json.dumps(forecast, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(f"Prognose geschrieben: {len(fc_spots)} Spots x bis {HORIZON} h.")
+
+    # --- Live-Messwerte (MeteoSchweiz OGD) + 6h-Verlauf fuers Dashboard -----
+    try:
+        meas = measurements.build(conf.spots, offset, hours=6)
+        (DATA_DIR / "measurements.json").write_text(
+            json.dumps({"generated": now.isoformat(timespec="minutes"), "hours": 6, "spots": meas},
+                       ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+        n_ok = sum(1 for m in meas if m["current"])
+        print(f"Messwerte geschrieben: {n_ok}/{len(meas)} Stationen mit aktuellem Wert.")
+    except Exception as exc:  # noqa: BLE001 - Messnetz-Ausfall darf den Lauf nicht killen
+        print(f"Messwerte uebersprungen: {exc}")
 
     state.save()
     print(f"Fertig. {n_alerts} neue Warnung(en) gesendet. Lokalzeit: {now:%Y-%m-%d %H:%M}")
