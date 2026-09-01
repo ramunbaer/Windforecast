@@ -5,7 +5,12 @@ on:
     # Alle 15 Min (GitHub-Cron laeuft in UTC; die Tageszeit-Filterung erfolgt lokal im Code).
     # Haelt Live-Messwerte frisch; Telegram-Dedup verhindert Mehrfach-Warnungen.
     - cron: "*/15 * * * *"
-  workflow_dispatch: {}   # erlaubt manuelles Ausloesen im Actions-Tab
+  workflow_dispatch:      # manuelles Ausloesen im Actions-Tab
+    inputs:
+      test:
+        description: "Nur Testnachricht an DM + Kanal senden (kein normaler Lauf)"
+        type: boolean
+        default: false
 
 concurrency:
   group: wind-alert
@@ -28,7 +33,13 @@ jobs:
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python -m windalert.main
+        run: |
+          if [ "${{ inputs.test }}" = "true" ]; then
+            echo "Test-Modus: sende Testnachricht an alle Ziele."
+            python -m windalert.main --test
+          else
+            python -m windalert.main
+          fi
 
       - name: Verlaufsdaten committen
         run: |
