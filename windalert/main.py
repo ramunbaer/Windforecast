@@ -123,13 +123,14 @@ def _targets(conf) -> list:
     return [t for t in (conf.telegram_chat_id, conf.telegram_channel) if t]
 
 
-def _broadcast(conf, text: str, dry_run: bool) -> bool:
-    """Sendet an alle Ziele. True, wenn mind. ein Versand erfolgreich war."""
+def _broadcast(conf, text: str, dry_run: bool) -> int:
+    """Sendet an ALLE Ziele (kein Kurzschluss!). Gibt die Anzahl erfolgreicher Sendungen zurueck."""
     tgts = _targets(conf)
     if dry_run or not conf.telegram_token or not tgts:
         send_telegram("", "", text)  # Dry-Run-Ausgabe auf Konsole
-        return False
-    return any(send_telegram(conf.telegram_token, t, text) for t in tgts)
+        return 0
+    # sum() ueber Liste -> jeder Versand wird ausgefuehrt (any() wuerde nach dem 1. Erfolg abbrechen).
+    return sum(send_telegram(conf.telegram_token, t, text) for t in tgts)
 
 
 def run(config_path: str = "config.toml", dry_run: bool = False) -> int:
@@ -290,7 +291,7 @@ def main() -> None:
             "Sobald der Wind an einem Spot den Grenzwert erreicht, kommt hier die Warnung.",
             dry_run=False,
         )
-        print(f"Testnachricht an {len(_targets(conf))} Ziel(e) gesendet." if sent else
+        print(f"Testnachricht an {sent} Ziel(e) gesendet." if sent else
               "Nicht gesendet (Token/Ziel fehlen oder falsch — siehe Ausgabe oben).")
         return
 
