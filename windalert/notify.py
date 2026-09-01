@@ -27,8 +27,11 @@ def send_telegram(token: str, chat_id: str, text: str, timeout: int = 20) -> boo
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             body = json.load(resp)
         if not body.get("ok"):
-            print(f"[Telegram] Fehler: {body}")
+            print(f"[Telegram] Fehler (Ziel={chat_id}): {body}")
             return False
+        chat = (body.get("result") or {}).get("chat") or {}
+        dest = chat.get("title") or chat.get("username") or chat.get("first_name") or "DM"
+        print(f"[Telegram] OK  Ziel={chat_id} -> geliefert an chat_id={chat.get('id')} ({dest})")
         return True
     except Exception as exc:  # noqa: BLE001 - Netzwerkfehler nicht fatal machen
         print(f"[Telegram] Ausnahme: {exc}")
