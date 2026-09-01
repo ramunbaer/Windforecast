@@ -27,7 +27,7 @@ def num(x):
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--file", default="data/history.csv")
-    ap.add_argument("--min-ms", type=float, default=5.0, help="Wind-Schwelle fuer 'foilbar'")
+    ap.add_argument("--min-ms", type=float, default=4.0, help="Wind-Schwelle fuer 'foilbar'")
     args = ap.parse_args()
 
     path = Path(args.file)

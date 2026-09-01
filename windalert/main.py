@@ -118,6 +118,20 @@ def build_message(spot_name, times, winds, gusts, dirs, foehn_dp, window, now):
 # ---------------------------------------------------------------------------
 # Hauptlauf
 # ---------------------------------------------------------------------------
+def _targets(conf) -> list:
+    """Alle konfigurierten Empfaenger: persoenliche chat_id und/oder Kanal."""
+    return [t for t in (conf.telegram_chat_id, conf.telegram_channel) if t]
+
+
+def _broadcast(conf, text: str, dry_run: bool) -> bool:
+    """Sendet an alle Ziele. True, wenn mind. ein Versand erfolgreich war."""
+    tgts = _targets(conf)
+    if dry_run or not conf.telegram_token or not tgts:
+        send_telegram("", "", text)  # Dry-Run-Ausgabe auf Konsole
+        return False
+    return any(send_telegram(conf.telegram_token, t, text) for t in tgts)
+
+
 def run(config_path: str = "config.toml", dry_run: bool = False) -> int:
     conf = cfg.load(config_path)
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -162,12 +176,11 @@ def run(config_path: str = "config.toml", dry_run: bool = False) -> int:
             if state.already_notified(key):
                 continue
             msg = build_message(spot.name, times, winds, gusts, dirs, foehn_dp, win, now)
-            ok = send_telegram(conf.telegram_token, conf.telegram_chat_id, msg) if not dry_run else \
-                send_telegram("", "", msg)
-            if ok or dry_run or not conf.telegram_token:
-                # Auch im Dry-Run/ohne Token als "gesehen" merken, sonst Spam beim naechsten Lauf.
+            sent = _broadcast(conf, msg, dry_run)
+            if sent or dry_run or not conf.telegram_token or not _targets(conf):
+                # Auch im Dry-Run/ohne Ziel als "gesehen" merken, sonst Spam beim naechsten Lauf.
                 state.mark_notified(key, now.isoformat(timespec="minutes"))
-            if ok:
+            if sent:
                 n_alerts += 1
 
     # --- Logbuch: eine Zeile je Spot fuer die aktuelle Stunde -------------
@@ -271,13 +284,14 @@ def main() -> None:
 
     if args.test:
         conf = cfg.load(args.config)
-        ok = send_telegram(
-            conf.telegram_token, conf.telegram_chat_id,
+        sent = _broadcast(
+            conf,
             "✅ <b>Wind-Alarm</b> Test — Verbindung steht. "
             "Sobald der Wind an einem Spot den Grenzwert erreicht, kommt hier die Warnung.",
+            dry_run=False,
         )
-        print("Testnachricht gesendet." if ok else
-              "Nicht gesendet (Token/Chat-ID fehlen oder falsch — siehe Ausgabe oben).")
+        print(f"Testnachricht an {len(_targets(conf))} Ziel(e) gesendet." if sent else
+              "Nicht gesendet (Token/Ziel fehlen oder falsch — siehe Ausgabe oben).")
         return
 
     run(args.config, args.dry_run)

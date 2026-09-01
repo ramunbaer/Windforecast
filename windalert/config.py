@@ -36,6 +36,7 @@ class Config:
     day_end_hour: int
     telegram_token: str
     telegram_chat_id: str
+    telegram_channel: str
     foehn_south: Point
     foehn_north: Point
     spots: list[Spot] = field(default_factory=list)
@@ -87,6 +88,8 @@ def load(path: str | Path = "config.toml") -> Config:
         # GitHub setzt "") faellt korrekt auf den Config-Wert zurueck.
         telegram_token=(os.environ.get("TELEGRAM_TOKEN") or t.get("token", "")).strip(),
         telegram_chat_id=(os.environ.get("TELEGRAM_CHAT_ID") or str(t.get("chat_id", ""))).strip(),
+        # Optionaler Kanal (z.B. "@meinkanal" oder numerische -100...-ID); an ALLE Ziele wird gesendet.
+        telegram_channel=(os.environ.get("TELEGRAM_CHANNEL") or str(t.get("channel", ""))).strip(),
         foehn_south=_point("south", "Lugano", 46.004, 8.951),
         foehn_north=_point("north", "Zuerich", 47.378, 8.540),
         spots=spots,

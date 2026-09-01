@@ -18,9 +18,9 @@ day_end_hour   = 21
 #   Bft 2 = 1.6–3.3   Bft 3 = 3.4–5.4   Bft 4 = 5.5–7.9   Bft 5 = 8.0–10.7
 #
 # Gewarnt wird, wenn der mittlere Wind >= min_ms erreicht (optional <= max_ms).
-# Aktuell = 5.0 m/s (~oberes Bft 3 / ~10 kt) = solide foilbar.
-# --> Frueher warnen: 3.4 (Bft 3) oder 1.6 (Bft 2). Mehr Wind: 6.0+.
-min_ms         = 5.0
+# Aktuell = 4.0 m/s (~8 kt, mittleres Bft 3) = foilbar.
+# --> Frueher warnen: 3.4 (Bft 3) oder 1.6 (Bft 2). Mehr Wind: 5.0-6.0+.
+min_ms         = 4.0
 max_ms         = 0.0       # 0 = keine Obergrenze
 min_run_hours  = 2         # mind. so viele zusammenhängende Stunden über der Schwelle
 
@@ -31,6 +31,10 @@ min_run_hours  = 2         # mind. so viele zusammenhängende Stunden über der 
 # Die chat_id ist nicht geheim und darf hier stehen -> dann genügt EIN Secret (TELEGRAM_TOKEN).
 token   = ""
 chat_id = "8835818255"
+# Optionaler Kanal fuer Broadcast an mehrere Leute (Bot muss Admin im Kanal sein).
+# Oeffentlicher Kanal: "@meinkanal"  |  privater Kanal: numerische ID "-100xxxxxxxxxx".
+# Gesendet wird an chat_id UND channel (beide, sofern gesetzt).
+channel = ""
 
 # Druckdifferenz Alpensüd − Alpennord (hPa) als Föhn-Indikator.
 # Positiv & gross  => Südföhn-Tendenz (v.a. relevant am Urnersee).
