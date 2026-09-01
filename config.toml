@@ -18,9 +18,9 @@ day_end_hour   = 21
 #   Bft 2 = 1.6–3.3   Bft 3 = 3.4–5.4   Bft 4 = 5.5–7.9   Bft 5 = 8.0–10.7
 #
 # Gewarnt wird, wenn der mittlere Wind >= min_ms erreicht (optional <= max_ms).
-# Standard = 3.4 m/s (Beginn Bft 3 = "es wird foilbar").
-# --> Für Bft 2 (früheste Meldung) min_ms = 1.6 setzen.
-min_ms         = 3.4
+# Aktuell = 5.0 m/s (~oberes Bft 3 / ~10 kt) = solide foilbar.
+# --> Frueher warnen: 3.4 (Bft 3) oder 1.6 (Bft 2). Mehr Wind: 6.0+.
+min_ms         = 5.0
 max_ms         = 0.0       # 0 = keine Obergrenze
 min_run_hours  = 2         # mind. so viele zusammenhängende Stunden über der Schwelle
 

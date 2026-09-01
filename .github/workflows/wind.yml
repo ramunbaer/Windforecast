@@ -2,8 +2,9 @@ name: wind-alert
 
 on:
   schedule:
-    # Stuendlich (GitHub-Cron laeuft in UTC; die Tageszeit-Filterung erfolgt lokal im Code).
-    - cron: "0 * * * *"
+    # Alle 15 Min (GitHub-Cron laeuft in UTC; die Tageszeit-Filterung erfolgt lokal im Code).
+    # Haelt Live-Messwerte frisch; Telegram-Dedup verhindert Mehrfach-Warnungen.
+    - cron: "*/15 * * * *"
   workflow_dispatch: {}   # erlaubt manuelles Ausloesen im Actions-Tab
 
 concurrency:
