@@ -1,10 +1,5 @@
 {
   "notified": {
-    "Untersee (Steckborn)|2026-08-30T15:00": "2026-08-30T01:43",
-    "Walensee (Tiefenwinkel)|2026-08-31T14:00": "2026-08-30T01:43",
-    "Zuerichsee (Staefa)|2026-08-30T16:00": "2026-08-30T01:43",
-    "Zuerichsee (Nuolen)|2026-08-31T14:00": "2026-08-30T01:43",
-    "Zuerichsee (Nuolen)|2026-08-31T17:00": "2026-08-30T04:30",
     "Zuerichsee (Staefa)|2026-08-31T18:00": "2026-08-30T10:41",
     "Greifensee|2026-08-30T15:00": "2026-08-30T16:06",
     "Untersee (Steckborn)|2026-08-30T17:00": "2026-08-30T16:06",
@@ -36,7 +31,9 @@
     "Zuerichsee (Nuolen)|2026-09-03T15:00": "2026-09-02T13:04",
     "Zuerichsee (Nuolen)|2026-09-03T13:00": "2026-09-02T17:07",
     "Untersee (Steckborn)|2026-09-04T15:00": "2026-09-02T20:45",
-    "Silvaplana|2026-09-04T13:00": "2026-09-02T20:45"
+    "Silvaplana|2026-09-04T13:00": "2026-09-02T20:45",
+    "Untersee (Steckborn)|2026-09-03T14:00": "2026-09-03T08:27",
+    "Untersee (Steckborn)|2026-09-04T14:00": "2026-09-03T08:27"
   },
-  "last_log_hour": "2026-09-02T23"
+  "last_log_hour": "2026-09-03T08"
 }
