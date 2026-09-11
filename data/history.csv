@@ -3265,3 +3265,11 @@ time_local,spot,wind_ms,gust_ms,dir_deg,sector,beaufort,p_msl_hpa,surface_p_hpa,
 2026-09-11T22:00,Silvaplana,1.1,1.5,41,NO,1,1024.2,827.8,8.2,0,0.0,-3.3,Nordlage (dp -3 hPa)
 2026-09-11T22:00,Zuerichsee (Staefa),0.8,1.7,40,NO,1,1023.5,976.1,17.2,0,0.0,-3.3,Nordlage (dp -3 hPa)
 2026-09-11T22:00,Zuerichsee (Nuolen),1.9,3.7,177,S,2,1023.6,976.0,16.3,0,0.0,-3.3,Gradient S
+2026-09-12T01:00,Greifensee,0.5,0.8,53,NO,1,1025.8,974.0,12.5,0,0.0,-3.5,"Bise (NO, Hochdruck)"
+2026-09-12T01:00,Untersee (Steckborn),0.6,1.9,279,W,1,1025.6,966.3,10.8,43,0.0,-3.5,Gradient W
+2026-09-12T01:00,Urnersee (Flueelen),1.6,2.2,72,ONO,2,1025.9,974.4,13.6,0,0.0,-3.5,"Bise (NO, Hochdruck)"
+2026-09-12T01:00,Urnersee (Sisikon),1.5,2.1,86,O,1,1025.4,974.4,16.1,0,0.0,-3.5,"Bise (NO, Hochdruck)"
+2026-09-12T01:00,Walensee (Tiefenwinkel),2.7,2.7,197,SSW,2,1025.9,976.5,15.5,0,0.0,-3.5,Gradient SSW
+2026-09-12T01:00,Silvaplana,1.2,1.7,5,N,1,1025.8,828.6,7.4,0,0.0,-3.5,Nordlage (dp -4 hPa)
+2026-09-12T01:00,Zuerichsee (Staefa),0.3,0.3,180,S,1,1025.3,977.5,15.2,9,0.0,-3.5,Gradient S
+2026-09-12T01:00,Zuerichsee (Nuolen),1.9,3.0,183,S,2,1025.4,977.7,15.7,24,0.0,-3.5,Gradient S
