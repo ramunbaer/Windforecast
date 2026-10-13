@@ -1,8 +1,5 @@
 {
   "notified": {
-    "Untersee (Steckborn)|2026-10-10T14:00": "2026-10-09T16:35",
-    "Untersee (Steckborn)|2026-10-11T12:00": "2026-10-09T16:35",
-    "Zuerichsee (Staefa)|2026-10-09T15:00": "2026-10-09T16:35",
     "Untersee (Steckborn)|2026-10-10T15:00": "2026-10-09T21:50",
     "Untersee (Steckborn)|2026-10-11T13:00": "2026-10-09T21:50",
     "Zuerichsee (Staefa)|2026-10-10T14:00": "2026-10-10T07:37",
@@ -12,5 +9,5 @@
     "Silvaplana|2026-10-13T15:00": "2026-10-12T08:23",
     "Silvaplana|2026-10-13T12:00": "2026-10-12T17:57"
   },
-  "last_log_hour": "2026-10-13T12"
+  "last_log_hour": "2026-10-13T20"
 }
