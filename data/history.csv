@@ -4657,3 +4657,11 @@ time_local,spot,wind_ms,gust_ms,dir_deg,sector,beaufort,p_msl_hpa,surface_p_hpa,
 2026-10-14T20:00,Silvaplana,0.9,1.8,13,NNO,1,1029.7,832.7,9.0,0,0.0,-1.2,Gradient NNO
 2026-10-14T20:00,Zuerichsee (Staefa),0.4,1.2,360,N,1,1029.1,981.4,17.3,0,0.0,-1.2,Gradient N
 2026-10-14T20:00,Zuerichsee (Nuolen),2.0,3.9,180,S,2,1029.3,981.4,16.0,0,0.0,-1.2,Gradient S
+2026-10-14T23:00,Greifensee,0.2,1.2,63,ONO,1,1029.5,977.6,12.8,2,0.0,0.0,"Bise (NO, Hochdruck)"
+2026-10-14T23:00,Untersee (Steckborn),1.7,2.8,310,NW,2,1029.9,970.4,11.4,100,0.0,0.0,Gradient NW
+2026-10-14T23:00,Urnersee (Flueelen),0.8,0.9,90,O,1,1029.2,977.5,12.9,0,0.0,0.0,"Bise (NO, Hochdruck)"
+2026-10-14T23:00,Urnersee (Sisikon),0.7,1.0,82,O,1,1028.9,977.6,15.4,93,0.0,0.0,"Bise (NO, Hochdruck)"
+2026-10-14T23:00,Walensee (Tiefenwinkel),2.1,3.5,141,SO,2,1029.1,979.5,15.5,13,0.0,0.0,Gradient SO
+2026-10-14T23:00,Silvaplana,0.8,1.1,30,NNO,1,1030.8,832.9,7.9,0,0.0,0.0,"Bise (NO, Hochdruck)"
+2026-10-14T23:00,Zuerichsee (Staefa),0.5,0.9,22,NNO,1,1029.0,981.1,15.6,51,0.0,0.0,"Bise (NO, Hochdruck)"
+2026-10-14T23:00,Zuerichsee (Nuolen),1.6,3.2,184,S,2,1029.0,980.9,14.3,73,0.0,0.0,Gradient S
