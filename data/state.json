@@ -71,7 +71,15 @@
     "Untersee (Steckborn)|2026-10-23T17:00": "2026-10-21T21:19",
     "Silvaplana|2026-10-23T07:00": "2026-10-21T21:19",
     "Zuerichsee (Staefa)|2026-10-23T18:00": "2026-10-21T21:19",
-    "Zuerichsee (Nuolen)|2026-10-23T18:00": "2026-10-21T21:19"
+    "Zuerichsee (Nuolen)|2026-10-23T18:00": "2026-10-21T21:19",
+    "Greifensee|2026-10-24T09:00": "2026-10-22T00:37",
+    "Untersee (Steckborn)|2026-10-23T15:00": "2026-10-22T00:37",
+    "Untersee (Steckborn)|2026-10-24T07:00": "2026-10-22T00:37",
+    "Zuerichsee (Staefa)|2026-10-22T14:00": "2026-10-22T00:37",
+    "Zuerichsee (Staefa)|2026-10-23T16:00": "2026-10-22T00:37",
+    "Zuerichsee (Staefa)|2026-10-24T07:00": "2026-10-22T00:37",
+    "Zuerichsee (Nuolen)|2026-10-23T19:00": "2026-10-22T00:37",
+    "Zuerichsee (Nuolen)|2026-10-24T07:00": "2026-10-22T00:37"
   },
-  "last_log_hour": "2026-10-21T21"
+  "last_log_hour": "2026-10-22T00"
 }
