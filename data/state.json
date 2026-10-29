@@ -1,11 +1,5 @@
 {
   "notified": {
-    "Greifensee|2026-10-25T15:00": "2026-10-25T14:56",
-    "Urnersee (Flueelen)|2026-10-25T11:00": "2026-10-25T14:56",
-    "Urnersee (Sisikon)|2026-10-25T15:00": "2026-10-25T14:56",
-    "Zuerichsee (Staefa)|2026-10-25T15:00": "2026-10-25T14:56",
-    "Greifensee|2026-10-25T16:00": "2026-10-25T18:34",
-    "Zuerichsee (Staefa)|2026-10-25T17:00": "2026-10-25T18:34",
     "Untersee (Steckborn)|2026-10-29T13:00": "2026-10-27T07:44",
     "Untersee (Steckborn)|2026-10-29T12:00": "2026-10-27T13:45",
     "Untersee (Steckborn)|2026-10-29T14:00": "2026-10-28T09:12",
@@ -14,7 +8,8 @@
     "Greifensee|2026-10-31T15:00": "2026-10-29T07:19",
     "Untersee (Steckborn)|2026-10-31T10:00": "2026-10-29T07:19",
     "Zuerichsee (Staefa)|2026-10-31T15:00": "2026-10-29T07:19",
-    "Untersee (Steckborn)|2026-10-31T11:00": "2026-10-29T14:34"
+    "Untersee (Steckborn)|2026-10-31T11:00": "2026-10-29T14:34",
+    "Silvaplana|2026-10-31T13:00": "2026-10-29T20:15"
   },
-  "last_log_hour": "2026-10-29T14"
+  "last_log_hour": "2026-10-29T20"
 }
