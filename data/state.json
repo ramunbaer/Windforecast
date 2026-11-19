@@ -73,7 +73,14 @@
     "Urnersee (Sisikon)|2026-11-20T13:00": "2026-11-19T00:01",
     "Walensee (Tiefenwinkel)|2026-11-19T14:00": "2026-11-19T00:01",
     "Zuerichsee (Nuolen)|2026-11-19T19:00": "2026-11-19T00:01",
-    "Zuerichsee (Nuolen)|2026-11-20T10:00": "2026-11-19T00:01"
+    "Zuerichsee (Nuolen)|2026-11-20T10:00": "2026-11-19T00:01",
+    "Greifensee|2026-11-20T12:00": "2026-11-19T05:13",
+    "Greifensee|2026-11-21T07:00": "2026-11-19T05:13",
+    "Untersee (Steckborn)|2026-11-21T07:00": "2026-11-19T05:13",
+    "Zuerichsee (Staefa)|2026-11-20T10:00": "2026-11-19T05:13",
+    "Zuerichsee (Staefa)|2026-11-21T07:00": "2026-11-19T05:13",
+    "Zuerichsee (Nuolen)|2026-11-20T07:00": "2026-11-19T05:13",
+    "Zuerichsee (Nuolen)|2026-11-21T07:00": "2026-11-19T05:13"
   },
-  "last_log_hour": "2026-11-19T00"
+  "last_log_hour": "2026-11-19T05"
 }
